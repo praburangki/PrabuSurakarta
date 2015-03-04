@@ -41,11 +41,12 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
                     || (this.gui.getGameState() == Gui.GAME_STATE_BLACK 
                     && piece.getColor() == Piece.COLOR_BLACK)) {
                     
+                
+                    this.dragOffsetX = x - piece.getX();
+                    this.dragOffsetY = y - piece.getY();
+                    this.dragPiece = piece;
+                    break;
                 }
-                this.dragOffsetX = x - piece.getX();
-                this.dragOffsetY = y - piece.getY();
-                this.dragPiece = piece;
-                break;
             }
         }
         
@@ -56,10 +57,10 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
     }
     
     private boolean mouseOverPiece(Piece piece, int x, int y) {
-        return piece.getX() <= x &&
-                piece.getX() + piece.getWidth() >= x &&
-                piece.getY() <= y &&
-                piece.getY() + piece.getHeight() >= y;
+        return piece.getX() <= x 
+                && piece.getX() + piece.getWidth() >= x 
+                && piece.getY() <= y 
+                && piece.getY() + piece.getHeight() >= y;
     }
 
     @Override

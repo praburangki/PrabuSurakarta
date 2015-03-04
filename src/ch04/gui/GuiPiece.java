@@ -3,35 +3,40 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch02;
+package ch04.gui;
 
+import ch04.logic.Piece;
 import java.awt.Image;
 
 /**
  *
  * @author praburangki
  */
-public class Piece {
-    public static final int COLOR_WHITE = 0, COLOR_BLACK = 1;
-    
-    private Image img;
-    private int x, y, color;
+public class GuiPiece {
 
-    public Piece(Image img, int x, int y, int color) {
+    private Image img;
+    private int x, y;
+    private Piece piece;
+
+    public GuiPiece(Image img, Piece piece) {
         this.img = img;
-        this.x = x;
-        this.y = y;
-        this.color = color;
+        this.piece = piece;
+
+        this.resetToUnderlyingPiecePosition();
     }
 
     public Image getImg() {
         return img;
     }
 
+    public Piece getPiece() {
+        return piece;
+    }
+
     public int getX() {
         return x;
     }
-    
+
     public void setX(int x) {
         this.x = x;
     }
@@ -43,23 +48,30 @@ public class Piece {
     public void setY(int y) {
         this.y = y;
     }
-    
+
     public int getWidth() {
-        return img.getWidth(null);
-    }
-    
-    public int getHeight() {
         return img.getHeight(null);
     }
 
+    public int getHeight() {
+        return img.getHeight(null);
+    }
+    
     public int getColor() {
-        return color;
+        return this.piece.getColor();
     }
     
     @Override
     public String toString() {
-        String strColor = this.color == COLOR_WHITE ? "white" : "black";
-        
-        return strColor + " " + x + "/" + y;
+        return this.piece + " " + x + "/" + y;
+    }
+    
+    public void resetToUnderlyingPiecePosition() {
+        this.x = Gui.convertColumnToX(piece.getColumn());
+        this.y = Gui.convertRowToY(piece.getRow());
+    }
+    
+    public boolean isCaptured() {
+        return this.piece.isCaptured();
     }
 }

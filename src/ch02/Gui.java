@@ -29,12 +29,12 @@ public class Gui extends JPanel {
     private static final int TILE_OFFSET_X = 45;
     private static final int TILE_OFFSET_Y = 75;
     
-    static final int GAME_STATE_WHITE = 0, GAME_STATE_BLACK = 1;
-    private int gameState = GAME_STATE_WHITE;
-    
     private Image imgBackground;
     
-    private List<Piece> pieces = new ArrayList<>();
+    private int gameState = GAME_STATE_WHITE;
+    static final int GAME_STATE_WHITE = 0, GAME_STATE_BLACK = 1;
+    
+    private List<Piece> pieces = new ArrayList<Piece>();
     private JLabel labelGameState;
 
     public Gui() {
