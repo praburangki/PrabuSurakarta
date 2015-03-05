@@ -14,10 +14,10 @@ import java.util.Arrays;
 public class Map {
 
     public static final int MAXSIZE = 6;
-    public static final int NOSTONE = 6;
-    public static final int WHITE = 6;
-    public static final int BLACK = 6;
-    public static final int SELECT = 6;
+    public static final int NOSTONE = 0;
+    public static final int WHITE = 1;
+    public static final int BLACK = 2;
+    public static final int SELECT = 3;
 
     private int whiteNum;
     private int blackNum;

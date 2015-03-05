@@ -11,8 +11,8 @@ package ch06.logic;
  */
 public class Piece {
     private int color;
-    public static final int COLOR_WHITE = 0;
-    public static final int COLOR_BLACK = 1;
+    public static final int COLOR_WHITE = 1;
+    public static final int COLOR_BLACK = 2;
     
     private int row;
     
