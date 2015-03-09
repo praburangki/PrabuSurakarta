@@ -30,13 +30,17 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(!this.gui.isDraggingGamePiecesEnabled()) {
+        if (!this.gui.isDraggingGamePiecesEnabled()) {
             return;
         }
-        
+
         int x = e.getPoint().x;
         int y = e.getPoint().y;
 
+        // find out which piece to move.
+        // we check the list from top to buttom
+        // (therefore we itereate in reverse order)
+        //
         for (int i = guiPieces.size() - 1; i >= 0; i--) {
             GuiPiece guiPiece = guiPieces.get(i);
             if (guiPiece.isCaptured()) {
@@ -48,19 +52,23 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
                         && guiPiece.getColor() == Piece.COLOR_WHITE)
                         || (gui.getGameState() == Game.GAME_STATE_BLACK
                         && guiPiece.getColor() == Piece.COLOR_BLACK)) {
-
-                    dragOffsetX = x - guiPiece.getX();
-                    dragOffsetY = y - guiPiece.getY();
-                    gui.setDragPiece(guiPiece);
-                    gui.repaint();
+                    // calculate offset, because we do not want the drag piece
+                    // to jump with it's upper left corner to the current mouse
+                    // position
+                    //
+                    this.dragOffsetX = x - guiPiece.getX();
+                    this.dragOffsetY = y - guiPiece.getY();
+                    this.gui.setDragPiece(guiPiece);
+                    this.gui.repaint();
                     break;
                 }
             }
         }
 
-        if (gui.getDragPiece() != null) {
-            guiPieces.remove(gui.getDragPiece());
-            guiPieces.add(gui.getDragPiece());
+        // move drag piece to the top of the list
+        if (this.gui.getDragPiece() != null) {
+            this.guiPieces.remove(this.gui.getDragPiece());
+            this.guiPieces.add(this.gui.getDragPiece());
         }
     }
 
@@ -85,6 +93,8 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
             int x = e.getPoint().x - dragOffsetX;
             int y = e.getPoint().y - dragOffsetY;
 
+            // set game piece to the new location if possible
+            //
             gui.setNewPieceLocation(gui.getDragPiece(), x, y);
             gui.repaint();
             gui.setDragPiece(null);
@@ -100,7 +110,7 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
             GuiPiece dragPiece = gui.getDragPiece();
             dragPiece.setX(x);
             dragPiece.setY(y);
-            
+
             gui.repaint();
         }
     }

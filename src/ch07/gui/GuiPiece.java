@@ -22,7 +22,7 @@ public class GuiPiece {
         this.img = img;
         this.piece = piece;
 
-        resetToUnderlyingPiecePosition();
+        this.resetToUnderlyingPiecePosition();
     }
 
     public Image getImg() {
@@ -61,20 +61,20 @@ public class GuiPiece {
     public String toString() {
         return this.piece + " " + x + "/" + y;
     }
+
     /**
-	 * move the gui piece back to the coordinates that
-	 * correspond with the underlying piece's row and column
-	 */
-    
+     * move the gui piece back to the coordinates that correspond with the
+     * underlying piece's row and column
+     */
     public void resetToUnderlyingPiecePosition() {
         x = Gui.convertColumnToX(piece.getColumn());
         y = Gui.convertRowToY(piece.getRow());
     }
-    
+
     public Piece getPiece() {
         return piece;
     }
-    
+
     public boolean isCaptured() {
         return piece.isCaptured();
     }

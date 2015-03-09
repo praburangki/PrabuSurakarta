@@ -29,10 +29,16 @@ public class Game implements Runnable {
     private IPlayerHandler activePlayerHandler;
     private Map map;
 
+    /**
+     * initialize game
+     */
     public Game() {
         map = new Map();
         map.init();
 
+        this.moveValidator = new MoveValidator(this, map);
+
+        // create and place pieces
         int currentColumn = Piece.COLUMN_A;
         for (int i = 0; i < 6; i++) {
             createAndAddPiece(Piece.COLOR_WHITE, Piece.ROW_1, currentColumn);
@@ -57,11 +63,15 @@ public class Game implements Runnable {
             currentColumn++;
         }
 
-        moveValidator = new MoveValidator(this, map);
         updateMap();
-
     }
 
+    /**
+     * set the player/client for the specified piece color
+     *
+     * @param pieceColor - the color the client/player controls
+     * @param playerHandler - the player/client
+     */
     public void setPlayer(int pieceColor, IPlayerHandler playerHandler) {
         switch (pieceColor) {
             case Piece.COLOR_BLACK:
@@ -75,17 +85,24 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * start main game flow
+     */
     public void startGame() {
+        // check if all players are ready
         System.out.println("Game : waiting for players");
         while (this.blackPlayerHandler == null || this.whitePlayerHandler == null) {
+            // players are still missing
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
         }
 
+        // set start player
         this.activePlayerHandler = this.whitePlayerHandler;
 
+        // start game flow
         System.out.println("Game : starting game flow");
         while (!isGameEndConditionReached()) {
             waitForMove();
@@ -95,6 +112,9 @@ public class Game implements Runnable {
         System.out.println("Game : game ended");
     }
 
+    /**
+     * swap active player and update game state
+     */
     private void swapActivePlayer() {
         if (this.activePlayerHandler == this.whitePlayerHandler) {
             this.activePlayerHandler = this.blackPlayerHandler;
@@ -105,8 +125,12 @@ public class Game implements Runnable {
         this.changeGameState();
     }
 
+    /**
+     * wait for a valid player move and execute it
+     */
     private void waitForMove() {
         Move move = null;
+        // wait for a valid move
         do {
             move = this.activePlayerHandler.getMove();
             try {
@@ -116,6 +140,7 @@ public class Game implements Runnable {
             }
         } while (move == null || !this.moveValidator.isMoveValid(move, false));
 
+        //execute move
         boolean success = this.movePiece(move);
         if (success) {
             this.blackPlayerHandler.moveSuccessfullyExecuted(move);
@@ -142,15 +167,32 @@ public class Game implements Runnable {
         moveValidator.setMap(map);
     }
 
+    /**
+     * create piece instance and add it to the internal list of pieces
+     *
+     * @param color on of Pieces.COLOR_..
+     * @param row on of Pieces.ROW_..
+     * @param column on of Pieces.COLUMN_..
+     */
     private void createAndAddPiece(int color, int row, int column) {
         Piece piece = new Piece(color, row, column);
         pieces.add(piece);
     }
 
+    /**
+     * Move piece to the specified location. If the target location is occupied
+     * by an opponent piece, that piece is marked as 'captured'. If the move
+     * could not be executed successfully, 'false' is returned and the game
+     * state does not change.
+     *
+     * @param move to execute
+     * @return true, if piece was moved successfully
+     */
     public boolean movePiece(Move move) {
 
         Piece piece = getNonCapturedPieceAtLocation(move.sourceRow, move.sourceColumn);
-//        map.map[move.sourceRow][move.sourceColumn] = 0;
+
+        // check if the move is capturing an opponent piece
         int opponentColor = piece.getColor() == Piece.COLOR_BLACK ? Piece.COLOR_WHITE : Piece.COLOR_BLACK;
         if (isNonCapturedPieceAtLocation(opponentColor, move.targetRow, move.targetColumn)) {
             Piece opponentPiece = getNonCapturedPieceAtLocation(move.targetRow, move.targetColumn);
@@ -162,13 +204,18 @@ public class Game implements Runnable {
 
         piece.setRow(move.targetRow);
         piece.setColumn(move.targetColumn);
-//        map.map[piece.getRow()][piece.getColumn()] = piece.getColor();
 
         updateMap();
 
         return true;
     }
 
+    /**
+     * check if the games end condition is met: one color does not have any
+     * pieces left
+     *
+     * @return true if the game end condition is met
+     */
     private boolean isGameEndConditionReached() {
         int blackNum = 0;
         int whiteNum = 0;
@@ -183,6 +230,14 @@ public class Game implements Runnable {
         return blackNum == 0 || whiteNum == 0;
     }
 
+    /**
+     * returns the first piece at the specified location that is not marked as
+     * 'captured'.
+     *
+     * @param row one of Piece.ROW_..
+     * @param col one of Piece.COLUMN_..
+     * @return the first not captured piece at the specified location
+     */
     public Piece getNonCapturedPieceAtLocation(int row, int col) {
         for (Piece piece : this.pieces) {
             if (piece.getRow() == row
@@ -193,6 +248,16 @@ public class Game implements Runnable {
         return null;
     }
 
+    /**
+     * Checks whether there is a piece at the specified location that is not
+     * marked as 'captured' and has the specified color.
+     *
+     * @param color one of Piece.COLOR_..
+     * @param row one of Piece.ROW_..
+     * @param col on of Piece.COLUMN_..
+     * @return true, if the location contains a not-captured piece of the
+     * specified color
+     */
     boolean isNonCapturedPieceAtLocation(int color, int row, int col) {
         for (Piece piece : pieces) {
             if (piece.getRow() == row
@@ -205,6 +270,13 @@ public class Game implements Runnable {
         return false;
     }
 
+    /**
+     * Checks whether there is a non-captured piece at the specified location
+     *
+     * @param row one of Piece.ROW_..
+     * @param column on of Piece.COLUMN_..
+     * @return true, if the location contains a piece
+     */
     boolean isNonCapturedPieceAtLocation(int row, int column) {
         for (Piece piece : this.pieces) {
             if (piece.getRow() == row && piece.getColumn() == column) {
@@ -214,17 +286,26 @@ public class Game implements Runnable {
         return false;
     }
 
+    /**
+     * @return current game state (one of ChessGame.GAME_STATE_..)
+     */
     public int getGameState() {
         return gameState;
     }
 
+    /**
+     * @return the internal list of pieces
+     */
     public List<Piece> getPieces() {
         return pieces;
     }
 
+    /**
+     * switches the game state depending on the current board situation.
+     */
     private void changeGameState() {
 
-		// check if game end condition has been reached
+        // check if game end condition has been reached
         //
         if (this.isGameEndConditionReached()) {
 
@@ -258,7 +339,7 @@ public class Game implements Runnable {
     public MoveValidator getMoveValidator() {
         return moveValidator;
     }
-    
+
     @Override
     public void run() {
         this.startGame();

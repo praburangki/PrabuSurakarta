@@ -19,11 +19,16 @@ public class ConsoleGui implements IPlayerHandler {
     private Game game;
 
     public ConsoleGui(Game game) {
-        this.game = game;
+        this.game = game; // create a new game
 
         printCurrentGameState(this.game);
     }
 
+    /**
+     * Return move object corresponding to string
+     *
+     * @param input - a valid move-string (e.g. "e7-e6")
+     */
     private Move convertStringToMove(String input) {
         if (input == null || input.length() != 5) {
             return null;
@@ -47,6 +52,12 @@ public class ConsoleGui implements IPlayerHandler {
         return new Move(sourceRow, sourceColumn, targetRow, targetColumn);
     }
 
+    /**
+     * Converts a column string (e.g. 'a') into its internal representation.
+     *
+     * @param strColumn a valid column string (e.g. 'a')
+     * @return internal integer representation of the column
+     */
     private int convertColumnStrToColumnInt(String strColumn) {
         if (strColumn.equalsIgnoreCase("a")) {
             return Piece.COLUMN_A;
@@ -65,6 +76,12 @@ public class ConsoleGui implements IPlayerHandler {
         }
     }
 
+    /**
+     * Converts a row string (e.g. '1') into its internal representation.
+     *
+     * @param strRow a valid row string (e.g. '1')
+     * @return internal integer representation of the row
+     */
     private int convertRowStrToRowInt(String strRow) {
         if (strRow.equalsIgnoreCase("1")) {
             return Piece.ROW_1;
@@ -79,10 +96,13 @@ public class ConsoleGui implements IPlayerHandler {
         } else if (strRow.equalsIgnoreCase("6")) {
             return Piece.ROW_6;
         } else {
-            throw new IllegalArgumentException("invalid column: " + strRow);
+            throw new IllegalArgumentException("invalid row: " + strRow);
         }
     }
 
+    /**
+     * Print current game board and game state information.
+     */
     public static void printCurrentGameState(Game game) {
         System.out.println("  a  b  c  d  e  f  ");
         for (int row = Piece.ROW_6; row >= Piece.ROW_1; row--) {
@@ -116,6 +136,17 @@ public class ConsoleGui implements IPlayerHandler {
         System.out.println("state : " + gameStateStr);
     }
 
+    /**
+     * Returns the name of the specified piece. The name is based on color
+     *
+     * The first letter represents the color: B=black, W=white, ?=unknown
+     * 
+     * A two letter empty string is returned in case the specified piece is null
+     *
+     * @param piece a chess piece
+     * @return string representation of the piece or a two letter empty string
+     * if the specified piece is null
+     */
     private static String getNameOfPiece(Piece piece) {
         if (piece == null) {
             return "  ";
@@ -137,6 +168,7 @@ public class ConsoleGui implements IPlayerHandler {
         return strColor;
     }
 
+    @Override
     public Move getMove() {
         System.out.println("your move (format : e2-e3) : ");
 
@@ -161,6 +193,7 @@ public class ConsoleGui implements IPlayerHandler {
         return move;
     }
 
+    @Override
     public void moveSuccessfullyExecuted(Move move) {
         printCurrentGameState(this.game);
 
@@ -169,5 +202,13 @@ public class ConsoleGui implements IPlayerHandler {
         } else if (this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON) {
             System.out.println("game end reached! White won!");
         }
+    }
+    
+    public static void main(String[] args) {
+        Game game = new Game();
+        ConsoleGui console = new ConsoleGui(game);
+        game.setPlayer(Piece.COLOR_WHITE, console);
+        game.setPlayer(Piece.COLOR_BLACK, console);
+        new Thread(game).start();
     }
 }

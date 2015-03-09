@@ -54,25 +54,31 @@ public class Gui extends JPanel implements IPlayerHandler {
     public Gui(Game game) {
         setLayout(null);
 
+        // background
         URL urlBackgroundImg = getClass().getResource("/img/surakarta.png");
         imgBackground = new ImageIcon(urlBackgroundImg).getImage();
 
+        // create game
         this.game = game;
 
+        // wrap game pieces into their graphical representation
         for (Piece piece : game.getPieces()) {
             createAndAddGuiPiece(piece);
         }
 
+        // add listeners to enable drag and drop
         PieceDragAndDropListener listener = new PieceDragAndDropListener(guiPieces, this);
         addMouseListener(listener);
         addMouseMotionListener(listener);
 
+        // label to display game state
         String labelTxt = getGameStateAsText();
         lblGameState = new JLabel(labelTxt);
         lblGameState.setBounds(0, 30, 80, 30);
         lblGameState.setForeground(Color.white);
         this.add(lblGameState);
 
+        // create application frame and set visible
         JFrame f = new JFrame();
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,6 +87,9 @@ public class Gui extends JPanel implements IPlayerHandler {
         f.setSize(imgBackground.getWidth(null), imgBackground.getHeight(null));
     }
 
+    /**
+     * @return textual description of current game state
+     */
     private String getGameStateAsText() {
         String state = "unknown";
         switch (game.getGameState()) {
@@ -100,12 +109,24 @@ public class Gui extends JPanel implements IPlayerHandler {
         return state;
     }
 
+    /**
+     * create a game piece
+     *
+     * @param piece that is going to be created and added to the list
+     */
     private void createAndAddGuiPiece(Piece piece) {
         Image img = getImageForPiece(piece.getColor());
         GuiPiece guiPiece = new GuiPiece(img, piece);
         guiPieces.add(guiPiece);
     }
 
+    /**
+     * load image for given color. This method translates the color information
+     * into a filename and loads that particular file.
+     *
+     * @param color color constant
+     * @return image
+     */
     private Image getImageForPiece(int color) {
         String filename = "";
         filename += (color == Piece.COLOR_WHITE ? "w" : "b");
@@ -119,7 +140,10 @@ public class Gui extends JPanel implements IPlayerHandler {
 
     @Override
     protected void paintComponent(Graphics g) {
+        // draw background
         g.drawImage(imgBackground, 0, 0, null);
+
+        // draw pieces
         for (GuiPiece guiPiece : guiPieces) {
             if (!guiPiece.isCaptured()) {
                 g.drawImage(guiPiece.getImg(), guiPiece.getX(), guiPiece.getY(), null);
@@ -144,6 +168,7 @@ public class Gui extends JPanel implements IPlayerHandler {
             //      highlightTargetX + SQUARE_WIDTH / 2, highlightTargetY + SQUARE_HEIGHT / 2);
         }
 
+        // draw valid target locations, if user is dragging a game piece
         if (isUserDraggingPiece()) {
 
             MoveValidator moveValidator = game.getMoveValidator();
@@ -170,6 +195,7 @@ public class Gui extends JPanel implements IPlayerHandler {
             }
         }
 
+        // draw game state label
         lblGameState.setText(this.getGameStateAsText());
     }
 
@@ -188,6 +214,9 @@ public class Gui extends JPanel implements IPlayerHandler {
         new Thread(game).start();
     }
 
+    /**
+     * @return current game state
+     */
     public int getGameState() {
         return game.getGameState();
     }
@@ -266,6 +295,7 @@ public class Gui extends JPanel implements IPlayerHandler {
         return this.dragPiece;
     }
 
+    @Override
     public Move getMove() {
         this.draggingGamePiecesEnabled = true;
         Move moveForExecution = this.currentMove;
@@ -274,33 +304,46 @@ public class Gui extends JPanel implements IPlayerHandler {
         return moveForExecution;
     }
 
+    @Override
     public void moveSuccessfullyExecuted(Move move) {
+        // adjust GUI piece
         GuiPiece guiPiece = this.getGuiPieceAt(move.targetRow, move.targetColumn);
         if (guiPiece == null) {
             throw new IllegalStateException("no guiPiece at " + move.targetRow + "/" + move.targetColumn);
         }
         guiPiece.resetToUnderlyingPiecePosition();
-        
+
+        // remember last move
         this.lastMove = move;
-        
+
+        // disable dragging until asked by ChessGame for the next move
         this.draggingGamePiecesEnabled = false;
-        
+
+        // repaint the new state
         this.repaint();
     }
-    
+
     public boolean isDraggingGamePiecesEnabled() {
         return draggingGamePiecesEnabled;
     }
-    
+
+    /**
+     * get non-captured the gui piece at the specified position
+     *
+     * @param row
+     * @param column
+     * @return the gui piece at the specified position, null if there is no
+     * piece
+     */
     private GuiPiece getGuiPieceAt(int row, int column) {
-        for(GuiPiece guiPiece : this.guiPieces) {
-            if(guiPiece.getPiece().getRow() == row
+        for (GuiPiece guiPiece : this.guiPieces) {
+            if (guiPiece.getPiece().getRow() == row
                     && guiPiece.getPiece().getColumn() == column
                     && !guiPiece.isCaptured()) {
                 return guiPiece;
             }
         }
-        
+
         return null;
     }
 }
