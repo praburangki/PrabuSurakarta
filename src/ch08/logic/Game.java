@@ -5,6 +5,7 @@
  */
 package ch08.logic;
 
+import ch08.ai.Evaluate;
 import ch08.console.ConsoleGui;
 import java.util.*;
 
@@ -91,6 +92,7 @@ public class Game implements Runnable {
      */
     public void startGame() {
         // check if all players are ready
+
         System.out.println("Game : waiting for players");
         while (this.blackPlayerHandler == null || this.whitePlayerHandler == null) {
             // players are still missing
@@ -165,6 +167,11 @@ public class Game implements Runnable {
         if (success) {
             this.blackPlayerHandler.moveSuccessfullyExecuted(move);
             this.whitePlayerHandler.moveSuccessfullyExecuted(move);
+            Evaluate eva = new Evaluate(this);
+//            int[][] m = eva.getMap().map;
+//            for (int i = 0; i < m.length; i++) {
+//                System.out.println(Arrays.toString(m[i]));
+//            }
         } else {
             throw new IllegalStateException("move was valid, but failed to execute it.");
         }
@@ -398,5 +405,9 @@ public class Game implements Runnable {
     @Override
     public void run() {
         this.startGame();
+    }
+
+    public ch08.logic.Map getMap() {
+        return map;
     }
 }

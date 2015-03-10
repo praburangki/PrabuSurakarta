@@ -5,10 +5,11 @@
  */
 package ch08.ai;
 
-import ch06.logic.Piece;
+import ch08.logic.Piece;
 import ch08.console.ConsoleGui;
 import ch08.logic.Game;
 import ch08.logic.IPlayerHandler;
+import ch08.logic.Map;
 import ch08.logic.Move;
 import ch08.logic.MoveValidator;
 import java.util.ArrayList;
@@ -22,16 +23,21 @@ public class AiPlayerHandler implements IPlayerHandler {
 
     private Game game;
     private MoveValidator validator;
+    private Map map;
+    private Evaluate evaluate;
 
     public int maxDepth = 2;
 
     public AiPlayerHandler(Game game) {
+        evaluate = new Evaluate(game);
         this.game = game;
         this.validator = this.game.getMoveValidator();
+        this.map = game.getMap();
     }
 
     @Override
     public Move getMove() {
+        System.out.println(map.toString());
         return getBestMove();
     }
 
@@ -48,11 +54,12 @@ public class AiPlayerHandler implements IPlayerHandler {
         List<Move> validMoves = generateMoves(false);
         int bestResult = Integer.MIN_VALUE;
         Move bestMove = null;
+        System.out.println(validMoves.toString());
         
         for(Move move : validMoves) {
             doMove(move);
             
-            int evaluationResult = -1 * alphaBeta(this.maxDepth, "");
+            int evaluationResult = -1 * alphaBeta(this.maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
             undoMove(move);
             if(evaluationResult > bestResult) {
                 bestResult = evaluationResult;
@@ -60,7 +67,7 @@ public class AiPlayerHandler implements IPlayerHandler {
             }
         }
         
-        System.out.println("done thinking! best move is " + move);
+        System.out.println("done thinking! best move is " + bestMove);
         
         return bestMove;
     }
@@ -70,7 +77,28 @@ public class AiPlayerHandler implements IPlayerHandler {
         System.out.println("executed : " + move);
     }
 
-    private int alphaBeta(int depth) {
+    private int alphaBeta(int depth, int alpha, int beta, int color) {
+        if(depth <= 0
+                || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
+                || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) {
+            return evaluate.evalue(map.map, color);
+        }
+        List<Move> moves = generateMoves(false);
+        for (Move move : moves) {
+            doMove(move);
+            int value = -1 * alphaBeta(depth - 1, -1 * beta, -1 * alpha, color ^ 3);
+            undoMove(move);
+            if(value > alpha) {
+                alpha = value;
+            }
+            if (value >= beta) break;
+        }
+        return alpha;
+    }
+    
+    private int evaluateState() {
+        
+        
         return 0;
     }
     

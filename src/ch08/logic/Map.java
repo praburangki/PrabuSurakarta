@@ -39,4 +39,13 @@ public class Map {
     public boolean isInMap(int x, int y) {
         return (x >= 0) && (x < MAXSIZE) && (y >= 0) && (y < MAXSIZE);
     }
+    
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < map.length; i++) {
+            s += Arrays.toString(map[i]) + "\n";
+        }
+        
+        return s;
+    }
 }

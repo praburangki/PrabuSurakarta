@@ -175,7 +175,7 @@ public class Gui extends JPanel implements IPlayerHandler {
 
         // draw valid target locations, if user is dragging a game piece
         if (isUserDraggingPiece()) {
-
+            List<Move> possibleMoves = new ArrayList<>();
             MoveValidator moveValidator = game.getMoveValidator();
             // iterate the complete board to check if target locations are valid
             for (int column = Piece.COLUMN_A; column <= Piece.COLUMN_F; column++) {
@@ -185,7 +185,6 @@ public class Gui extends JPanel implements IPlayerHandler {
 
                     // check if target location is valid
                     if (moveValidator.isMoveValid(new Move(sourceRow, sourceColumn, row, column), false)) {
-
                         int highlightX = convertColumnToX(column);
                         int highlightY = convertRowToY(row);
 
@@ -198,6 +197,7 @@ public class Gui extends JPanel implements IPlayerHandler {
                     }
                 }
             }
+            System.out.println(possibleMoves.toString());
         }
 
         // draw game state label

@@ -5,7 +5,7 @@
  */
 package ch08;
 
-import ch08.console.ConsoleGui;
+import ch08.ai.AiPlayerHandler;
 import ch08.gui.Gui;
 import ch08.logic.Game;
 import ch08.logic.Piece;
@@ -19,10 +19,12 @@ public class Main {
         Game game = new Game();
         
         Gui gui = new Gui(game);
-        ConsoleGui console = new ConsoleGui(game);
+//        ConsoleGui console = new ConsoleGui(game);
+        AiPlayerHandler ai = new AiPlayerHandler(game);
+        ai.maxDepth = 1;
         
-        game.setPlayer(Piece.COLOR_WHITE, gui);
-        game.setPlayer(Piece.COLOR_BLACK, console);
+        game.setPlayer(Piece.COLOR_WHITE, ai);
+        game.setPlayer(Piece.COLOR_BLACK, gui);
         
         new Thread(game).start();
     }

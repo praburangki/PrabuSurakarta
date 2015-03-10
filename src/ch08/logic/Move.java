@@ -36,7 +36,11 @@ public class Move {
 
     @Override
     public String toString() {
-        return "(" + sourceRow + "," + sourceColumn + ")->(" + targetRow + "," + targetColumn + ")";
+//        String s = "(" + sourceRow + "," + sourceColumn + ")->(" + targetRow + "," + targetColumn + ")";
+        String s = sourceRow + "" + sourceColumn + "" + targetRow + "" + targetColumn 
+                + (capturedPiece != null ? "p" : " ");
+        
+        return s;
     }
     
     @Override

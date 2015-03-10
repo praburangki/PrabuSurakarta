@@ -68,30 +68,27 @@ public class MoveValidator {
         // validate piece movement rules
         boolean validPieceMove = isValidMove(sourceRow, sourceColumn, targetRow, targetColumn);
 
-        if (!validPieceMove) {
-            return false;
-        }
-
-        return true;
+        return validPieceMove;
     }
 
     private boolean isValidMove(int sourceRow, int sourceColumn, int targetRow, int targetColumn) {
-        boolean isValid = false;
+//        boolean isValid = false;
 
         Move temp = new Move(sourceRow, sourceColumn, targetRow, targetColumn);
         int color_temp = sourcePiece.getColor();
         Stack stack_temp = new Stack();
         getAttackMoves(map, sourceRow, sourceColumn, color_temp, stack_temp);
         getUnAttackMoves(map, sourceRow, sourceColumn, stack_temp);
-
         for (int i = 0; i < stack_temp.size(); i++) {
             Move m = (Move) stack_temp.get(i);
             if (temp.equals(m)) {
-                isValid = true;
+//                isValid = true;
+                return true;
             }
         }
 
-        return isValid;
+//        return isValid;
+        return false;
     }
 
     public static final int[] outx = {1, 1, 1, 1, 1, 1, 0, 1, 2, 3, 4, 5, 4, 4, 4, 4, 4, 4, 5, 4, 3, 2, 1, 0};
@@ -213,15 +210,15 @@ public class MoveValidator {
 
     public void setMap(Map map) {
         this.map = map;
-        for (int i = 0; i < map.map.length; i++) {
-            for (int j = 0; j < map.map.length; j++) {
-                System.out.print(map.map[i][j] + " ");
-            }
-            System.out.println();
-        }
+//        for (int i = 0; i < map.map.length; i++) {
+//            for (int j = 0; j < map.map.length; j++) {
+//                System.out.print(map.map[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
     }
     
     private void log(String message) {
         if(debug) System.out.println(message);
-    }
+    }   
 }
