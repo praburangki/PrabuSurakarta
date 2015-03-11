@@ -144,6 +144,7 @@ public class Game implements Runnable {
     private void waitForMove() {
         Move move = null;
         // wait for a valid move
+        
         do {
             move = this.activePlayerHandler.getMove();
             try {
@@ -151,14 +152,16 @@ public class Game implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            
+            
 
-            if (move != null && this.moveValidator.isMoveValid(move, false)) {
+            if (move != null && this.moveValidator.isMoveValid(move, true)) {
                 break;
             } else if (move != null && !this.moveValidator.isMoveValid(move, true)) {
                 System.out.println("provided move was invalid : " + move);
-                ConsoleGui.printCurrentGameState(this);
+//                ConsoleGui.printCurrentGameState(this);
                 move = null;
-                System.exit(0);
+//                System.exit(0);
             }
         } while (move == null);
 

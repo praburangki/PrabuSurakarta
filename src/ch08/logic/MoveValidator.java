@@ -36,59 +36,47 @@ public class MoveValidator {
         sourcePiece = this.game.getNonCapturedPieceAtLocation(sourceRow, sourceColumn);
         targetPiece = this.game.getNonCapturedPieceAtLocation(targetRow, targetColumn);
 
-        // source piece does not exist
-        if (sourcePiece == null) {
-            log("source piece does not exists");
-            return false;
-        }
-
-        // source piece has right color?
-        if (sourcePiece.getColor() == Piece.COLOR_WHITE
-                && this.game.getGameState() == Game.GAME_STATE_WHITE) {
-            // ok
-        } else if (sourcePiece.getColor() == Piece.COLOR_BLACK
-                && this.game.getGameState() == Game.GAME_STATE_BLACK) {
-            // ok
-        } else {
-            log("it's not your turn :"
-                    + " pieceColor = " + Piece.getColorString(sourcePiece.getColor())
-                    + " gameState = " + this.game.getGameState());
-            ConsoleGui.printCurrentGameState(this.game);
-            // it's not your turn 
-            return false;
-        }
-
-        // check if target location within boundaries
-        if (targetRow < Piece.ROW_1 || targetRow > Piece.ROW_6
-                || targetColumn < Piece.COLUMN_A || targetColumn > Piece.COLUMN_F) {
-            log("target row or column out of scope");
-            return false;
-        }
-
         // validate piece movement rules
-        boolean validPieceMove = isValidMove(sourceRow, sourceColumn, targetRow, targetColumn);
+        boolean validPieceMove = isValidMove(sourceRow, sourceColumn, targetRow, targetColumn, debug);
 
         return validPieceMove;
     }
 
-    private boolean isValidMove(int sourceRow, int sourceColumn, int targetRow, int targetColumn) {
-//        boolean isValid = false;
+    Stack stack_temp;
+    private boolean isValidMove(int sourceRow, int sourceColumn, int targetRow, int targetColumn, boolean debug) {
+
+        boolean isValid = false;
 
         Move temp = new Move(sourceRow, sourceColumn, targetRow, targetColumn);
         int color_temp = sourcePiece.getColor();
-        Stack stack_temp = new Stack();
+        stack_temp = new Stack();
+        if(debug) {
+            System.out.println("temp move : " + temp.toString());
+        }
         getAttackMoves(map, sourceRow, sourceColumn, color_temp, stack_temp);
-        getUnAttackMoves(map, sourceRow, sourceColumn, stack_temp);
+        getUnAttackMoves(map, sourceRow, sourceColumn, stack_temp, debug);
+        
+        if (debug) {
+            System.out.println("Stack : " + stack_temp.toString());
+        }
+        
         for (int i = 0; i < stack_temp.size(); i++) {
             Move m = (Move) stack_temp.get(i);
             if (temp.equals(m)) {
-//                isValid = true;
-                return true;
+                if (debug) {
+
+                    isValid = true;
+                } else {
+                    return true;
+                }
             }
         }
 
-//        return isValid;
-        return false;
+        if (debug) {
+            return isValid;
+        } else {
+            return false;
+        }
     }
 
     public static final int[] outx = {1, 1, 1, 1, 1, 1, 0, 1, 2, 3, 4, 5, 4, 4, 4, 4, 4, 4, 5, 4, 3, 2, 1, 0};
@@ -192,7 +180,7 @@ public class MoveValidator {
     }
 
     @SuppressWarnings("static-access")
-    private void getUnAttackMoves(Map board, int x, int y, Stack stack) {
+    private void getUnAttackMoves(Map board, int x, int y, Stack stack, boolean debug) {
         int i, tx, ty;
 
         for (i = 0; i < 8; i++) {
@@ -217,8 +205,10 @@ public class MoveValidator {
 //            System.out.println();
 //        }
     }
-    
+
     private void log(String message) {
-        if(debug) System.out.println(message);
-    }   
+        if (debug) {
+            System.out.println(message);
+        }
+    }
 }

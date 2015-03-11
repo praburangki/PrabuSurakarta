@@ -7,6 +7,7 @@ package ch08.gui;
 
 import ch08.logic.*;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.net.URL;
@@ -147,6 +148,19 @@ public class Gui extends JPanel implements IPlayerHandler {
     protected void paintComponent(Graphics g) {
         // draw background
         g.drawImage(imgBackground, 0, 0, null);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        int x1 = 360, y1 = 145;
+        for (int i = 0; i < 6; i++) {
+            g.drawString(i + "", x1, y1);
+            y1 += 45;
+        }
+        
+        x1 = 382;
+        y1 = 120;
+        for (int i = 0; i < 6; i++) {
+            g.drawString(i + "", x1, y1);
+            x1 += 45;
+        }
 
         // draw pieces
         for (GuiPiece guiPiece : guiPieces) {
@@ -197,7 +211,6 @@ public class Gui extends JPanel implements IPlayerHandler {
                     }
                 }
             }
-            System.out.println(possibleMoves.toString());
         }
 
         // draw game state label
@@ -271,7 +284,7 @@ public class Gui extends JPanel implements IPlayerHandler {
         int targetColumn = Gui.convertXToColumn(x);
 
         Move move = new Move(dragPiece.getPiece().getRow(), dragPiece.getPiece().getColumn(), targetRow, targetColumn);
-        if (this.game.getMoveValidator().isMoveValid(move, true)) {
+        if (this.game.getMoveValidator().isMoveValid(move, false)) {
             this.currentMove = move;
         } else {
             dragPiece.resetToUnderlyingPiecePosition();

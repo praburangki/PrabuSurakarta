@@ -51,6 +51,7 @@ public class Evaluate {
         }
         attackRange = new int[MAXSIZE][MAXSIZE];
         attackNow = new int[MAXSIZE][MAXSIZE];
+        moveRange = new int[MAXSIZE][MAXSIZE];
     }
 
     public boolean isValidPos(int x, int y) {

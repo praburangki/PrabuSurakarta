@@ -37,7 +37,6 @@ public class AiPlayerHandler implements IPlayerHandler {
 
     @Override
     public Move getMove() {
-        System.out.println(map.toString());
         return getBestMove();
     }
 
@@ -54,7 +53,6 @@ public class AiPlayerHandler implements IPlayerHandler {
         List<Move> validMoves = generateMoves(false);
         int bestResult = Integer.MIN_VALUE;
         Move bestMove = null;
-        System.out.println(validMoves.toString());
         
         for(Move move : validMoves) {
             doMove(move);
@@ -81,7 +79,8 @@ public class AiPlayerHandler implements IPlayerHandler {
         if(depth <= 0
                 || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) {
-            return evaluate.evalue(map.map, color);
+//            return evaluate.evalue(map.map, color);
+            return 0;
         }
         List<Move> moves = generateMoves(false);
         for (Move move : moves) {
@@ -131,8 +130,8 @@ public class AiPlayerHandler implements IPlayerHandler {
                         
                         if(debug) System.out.println("testing move : " + testMove);
                         
-                        if(this.validator.isMoveValid(testMove, true)) {
-                            validMoves.add(testMove.clone());
+                        if(this.validator.isMoveValid(testMove, false)) {
+                            validMoves.add(testMove.copy());
                         }
                     }
                 }

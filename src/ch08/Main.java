@@ -21,7 +21,7 @@ public class Main {
         Gui gui = new Gui(game);
 //        ConsoleGui console = new ConsoleGui(game);
         AiPlayerHandler ai = new AiPlayerHandler(game);
-        ai.maxDepth = 1;
+        ai.maxDepth = 2;
         
         game.setPlayer(Piece.COLOR_WHITE, ai);
         game.setPlayer(Piece.COLOR_BLACK, gui);

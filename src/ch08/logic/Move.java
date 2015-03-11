@@ -36,15 +36,14 @@ public class Move {
 
     @Override
     public String toString() {
-//        String s = "(" + sourceRow + "," + sourceColumn + ")->(" + targetRow + "," + targetColumn + ")";
-        String s = sourceRow + "" + sourceColumn + "" + targetRow + "" + targetColumn 
-                + (capturedPiece != null ? "p" : " ");
+        String s = "(" + sourceRow + "," + sourceColumn + ")->(" + targetRow + "," + targetColumn + ")";
+//        String s = sourceRow + "" + sourceColumn + "" + targetRow + "" + targetColumn 
+//                + (capturedPiece != null ? "p" : " ");
         
         return s;
     }
     
-    @Override
-    public Move clone() {
+    public Move copy() {
         return new Move(sourceRow, sourceColumn, targetRow, targetColumn);
     }
 }
