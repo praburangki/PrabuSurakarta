@@ -12,6 +12,7 @@ import java.util.Arrays;
  * @author praburangki
  */
 public class MoveValidator {
+
     private Game game;
     private Piece sourcePiece, targetPiece;
     private boolean debug;
@@ -21,28 +22,28 @@ public class MoveValidator {
         this.game = game;
         this.map = map;
     }
-    
+
     public boolean isMoveValid(Move move, boolean debug) {
         int sourceRow = move.sourceRow;
         int sourceColumn = move.sourceColumn;
         int targetRow = move.targetRow;
         int targetColumn = move.targetColumn;
-        
+
         sourcePiece = this.game.getNonCapturedPieceAtLocation(sourceRow, sourceColumn);
         targetPiece = this.game.getNonCapturedPieceAtLocation(targetRow, targetColumn);
-    
+
         return isValidMove(sourceRow, sourceColumn, targetRow, targetColumn, debug);
     }
-    
+
     private boolean isValidMove(int sourceRow, int sourceColumn, int targetRow, int targetColumn, boolean debug) {
         boolean isValid;
         int color_temp = sourcePiece.getColor();
-        isValid = getUnAttackMoves(map, sourceRow, sourceColumn, debug) || 
-                getAttackMoves(map, sourceRow, sourceColumn, color_temp);
-        
+        isValid = getUnAttackMoves(map, sourceRow, sourceColumn, targetRow, targetColumn, debug)
+                || getAttackMoves(map, sourceRow, sourceColumn, targetRow, targetColumn, color_temp);
+
         return isValid;
     }
-    
+
     public static final int[] outx = {1, 1, 1, 1, 1, 1, 0, 1, 2, 3, 4, 5, 4, 4, 4, 4, 4, 4, 5, 4, 3, 2, 1, 0};
     public static final int[] outy = {0, 1, 2, 3, 4, 5, 4, 4, 4, 4, 4, 4, 5, 4, 3, 2, 1, 0, 1, 1, 1, 1, 1, 1};
     public static final int[] inx = {2, 2, 2, 2, 2, 2, 0, 1, 2, 3, 4, 5, 3, 3, 3, 3, 3, 3, 5, 4, 3, 2, 1, 0};
@@ -52,38 +53,42 @@ public class MoveValidator {
     public final int[] stepx = {-1, -1, -1, 0, 0, 1, 1, 1};
     public final int[] stepy = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-    private boolean getAttackMoves(Map board, int x, int y, int color) {
+    private boolean getAttackMoves(Map board, int sourceRow, int sourceColumn, int targetRow, int targetColumn, int color) {
         int i, p;
         boolean[] vis = new boolean[LINE_LEN];
 
         Arrays.fill(vis, false);
         for (i = 0; i < LINE_LEN; i++) {
-            if (x == outx[i] && y == outy[i]) {
+            if (sourceRow == outx[i] && sourceColumn == outy[i]) {
                 p = getOutTarget(board, i, 1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, outx[p], outy[p]));
+                    if (targetRow == outx[p] && targetColumn == outy[p]) {
+                        return true;
+                    }
                     vis[p] = true;
-                    return true;
                 }
                 p = getOutTarget(board, i, -1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, outx[p], outy[p]));
+                    if (targetRow == outx[p] && targetColumn == outy[p]) {
+                        return true;
+                    }
                     vis[p] = true;
-                    return true;
                 }
             }
-            if (x == inx[i] && y == iny[i]) {
+            if (sourceRow == inx[i] && sourceColumn == iny[i]) {
                 p = getInTarget(board, i, 1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, inx[p], iny[p]));
+                    if (targetRow == inx[p] && targetColumn == iny[p]) {
+                        return true;
+                    }
                     vis[p] = true;
-                    return true;
                 }
                 p = getInTarget(board, i, -1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, inx[p], iny[p]));
+                    if (targetRow == inx[p] && targetColumn == iny[p]) {
+                        return true;
+                    }
                     vis[p] = true;
-                    return true;
                 }
             }
         }
@@ -149,17 +154,20 @@ public class MoveValidator {
     }
 
     @SuppressWarnings("static-access")
-    private boolean getUnAttackMoves(Map board, int x, int y, boolean debug) {
+    private boolean getUnAttackMoves(Map board, int sourceRow, int sourceColumn,
+            int targetRow, int targetColumn, boolean debug) {
         int i, tx, ty;
 
         for (i = 0; i < 8; i++) {
-            tx = x + stepx[i];
-            ty = y + stepy[i];
+            tx = sourceRow + stepx[i];
+            ty = sourceColumn + stepy[i];
             if (board.isInMap(tx, ty) && board.map[tx][ty] == board.NOSTONE) {
-                return true;
+                if (tx == targetRow && ty == targetColumn) {
+                    return true;
+                }
             }
         }
-        
+
         return false;
     }
 

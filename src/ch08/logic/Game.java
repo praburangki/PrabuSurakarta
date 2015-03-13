@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class Game implements Runnable {
 
-    public int gameState = GAME_STATE_WHITE;
+    public int gameState = GAME_STATE_BLACK;
     public static final int GAME_STATE_WHITE = 0;
     public static final int GAME_STATE_BLACK = 1;
     public static final int GAME_STATE_END_BLACK_WON = 2;
