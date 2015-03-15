@@ -5,58 +5,68 @@
  */
 package ch08.ai;
 
+import ch08.logic.Piece;
 import ch08.console.ConsoleGui;
 import ch08.logic.Game;
 import ch08.logic.IPlayerHandler;
+import ch08.logic.Map;
 import ch08.logic.Move;
 import ch08.logic.MoveValidator;
-import ch08.logic.Piece;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author praburangki
+ * @author Prabu Rangki
  */
 public class AiPlayerHandler2 implements IPlayerHandler {
 
     private Game game;
     private MoveValidator validator;
+    private Map map;
+    private Evaluate evaluate;
 
-    /**
-     * number of moves to look into the future
-     */
     public int maxDepth = 2;
 
     public AiPlayerHandler2(Game game) {
+        evaluate = new Evaluate(game);
         this.game = game;
         this.validator = this.game.getMoveValidator();
+        this.map = game.getMap();
     }
-    
+
     @Override
     public Move getMove() {
         return getBestMove();
     }
-    
+
+    /**
+     * get best move for current game situation
+     *
+     * @return a valid Move instance
+     */
     private Move getBestMove() {
-        System.out.println("getting beest move");
-        ConsoleGui.printCurrentGameState(this.game);
-        System.out.println("thinking...");
+        System.out.println("Getting best move");
+        ConsoleGui.printCurrentGameState(game);
+        System.out.println("thingking...");
         
         List<Move> validMoves = generateMoves(false);
         int bestResult = Integer.MIN_VALUE;
         Move bestMove = null;
         
-        for(Move move: validMoves) {
+        for(Move move : validMoves) {
             doMove(move);
-            int evaluationResult = -1 * negaMax(this.maxDepth, "");
+            
+            int evaluationResult = -1 * alphaBeta(this.maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
+            System.out.println("the move : " + move + "; eval : " + evaluationResult);
             undoMove(move);
             if(evaluationResult > bestResult) {
                 bestResult = evaluationResult;
                 bestMove = move;
             }
         }
-        System.out.println("done thinking! best move is : " + bestMove);
+        
+        System.out.println("done thinking! best move is " + bestMove + "with bestResult : " + bestResult);
         
         return bestMove;
     }
@@ -65,28 +75,31 @@ public class AiPlayerHandler2 implements IPlayerHandler {
     public void moveSuccessfullyExecuted(Move move) {
         System.out.println("executed : " + move);
     }
-    
-    private int negaMax(int depth, String indent) {
-        if(depth <= 0 
+
+    private int alphaBeta(int depth, int alpha, int beta, int color) {
+        if(depth <= 0
                 || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) {
-            return 0;
+            return evaluate.evalue(map.map, color);
+//            return 0;
         }
-        
         List<Move> moves = generateMoves(false);
-        int currentMax = Integer.MIN_VALUE;
-        
-        for(Move currentMove : moves) {
-            doMove(currentMove);
-            int score = -1 * negaMax(depth, indent + " ");
-            undoMove(currentMove);
-            
-            if(score > currentMax) {
-                currentMax = score;
+        for (Move move : moves) {
+            doMove(move);
+            int value = -1 * alphaBeta(depth - 1, -1 * beta, -1 * alpha, color ^ 3);
+            undoMove(move);
+            if(value > alpha) {
+                alpha = value;
             }
+            if (value >= beta) break;
         }
+        return alpha;
+    }
+    
+    private int evaluateState() {
         
-        return currentMax;
+        
+        return 0;
     }
     
     private void undoMove(Move move) {
@@ -112,8 +125,11 @@ public class AiPlayerHandler2 implements IPlayerHandler {
                 
                 for(int targetRow = Piece.ROW_1; targetRow <= Piece.ROW_6; targetRow++) {
                     for(int targetColumn = Piece.COLUMN_A; targetColumn <= Piece.COLUMN_F; targetColumn++) {
+                        
                         testMove.targetRow = targetRow;
                         testMove.targetColumn = targetColumn;
+                        
+                        if(debug) System.out.println("testing move : " + testMove);
                         
                         if(this.validator.isMoveValid(testMove, false)) {
                             validMoves.add(testMove.copy());
@@ -122,7 +138,6 @@ public class AiPlayerHandler2 implements IPlayerHandler {
                 }
             }
         }
-        
         return validMoves;
     }
 }

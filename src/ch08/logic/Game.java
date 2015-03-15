@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class Game implements Runnable {
 
-    public int gameState = GAME_STATE_BLACK;
+    public int gameState = GAME_STATE_WHITE;
     public static final int GAME_STATE_WHITE = 0;
     public static final int GAME_STATE_BLACK = 1;
     public static final int GAME_STATE_END_BLACK_WON = 2;
@@ -270,6 +270,8 @@ public class Game implements Runnable {
         } else {
             this.gameState = Game.GAME_STATE_WHITE;
         }
+        
+        updateMap();
     }
 
     /**
