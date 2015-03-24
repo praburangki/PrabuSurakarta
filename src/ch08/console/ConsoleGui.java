@@ -59,17 +59,17 @@ public class ConsoleGui implements IPlayerHandler {
      * @return internal integer representation of the column
      */
     private int convertColumnStrToColumnInt(String strColumn) {
-        if (strColumn.equalsIgnoreCase("0")) {
+        if (strColumn.equalsIgnoreCase("a")) {
             return Piece.COLUMN_A;
-        } else if (strColumn.equalsIgnoreCase("1")) {
+        } else if (strColumn.equalsIgnoreCase("b")) {
             return Piece.COLUMN_B;
-        } else if (strColumn.equalsIgnoreCase("2")) {
+        } else if (strColumn.equalsIgnoreCase("c")) {
             return Piece.COLUMN_C;
-        } else if (strColumn.equalsIgnoreCase("3")) {
+        } else if (strColumn.equalsIgnoreCase("d")) {
             return Piece.COLUMN_D;
-        } else if (strColumn.equalsIgnoreCase("4")) {
+        } else if (strColumn.equalsIgnoreCase("e")) {
             return Piece.COLUMN_E;
-        } else if (strColumn.equalsIgnoreCase("5")) {
+        } else if (strColumn.equalsIgnoreCase("f")) {
             return Piece.COLUMN_F;
         } else {
             throw new IllegalArgumentException("invalid column: " + strColumn);
@@ -83,17 +83,17 @@ public class ConsoleGui implements IPlayerHandler {
      * @return internal integer representation of the row
      */
     private int convertRowStrToRowInt(String strRow) {
-        if (strRow.equalsIgnoreCase("0")) {
+        if (strRow.equalsIgnoreCase("1")) {
             return Piece.ROW_1;
-        } else if (strRow.equalsIgnoreCase("1")) {
-            return Piece.ROW_2;
         } else if (strRow.equalsIgnoreCase("2")) {
-            return Piece.ROW_3;
+            return Piece.ROW_2;
         } else if (strRow.equalsIgnoreCase("3")) {
-            return Piece.ROW_4;
+            return Piece.ROW_3;
         } else if (strRow.equalsIgnoreCase("4")) {
-            return Piece.ROW_5;
+            return Piece.ROW_4;
         } else if (strRow.equalsIgnoreCase("5")) {
+            return Piece.ROW_5;
+        } else if (strRow.equalsIgnoreCase("6")) {
             return Piece.ROW_6;
         } else {
             throw new IllegalArgumentException("invalid row: " + strRow);
@@ -104,10 +104,10 @@ public class ConsoleGui implements IPlayerHandler {
      * Print current game board and game state information.
      */
     public static void printCurrentGameState(Game game) {
-        System.out.println("  0  1  2  3  4  5  ");
+        System.out.println("  a  b  c  d  e  f  ");
         for (int row = Piece.ROW_6; row >= Piece.ROW_1; row--) {
             System.out.println(" +--+--+--+--+--+--+");
-            String strRow = (row ) + "|";
+            String strRow = (row + 1) + "|";
             for (int column = Piece.COLUMN_A; column <= Piece.COLUMN_F; column++) {
                 Piece piece = game.getNonCapturedPieceAtLocation(row, column);
                 String pieceStr = getNameOfPiece(piece);
@@ -116,7 +116,7 @@ public class ConsoleGui implements IPlayerHandler {
             System.out.println(strRow + (row + 1));
         }
         System.out.println(" +--+--+--+--+--+--+");
-        System.out.println("  0  1  2  3  4  5  ");
+        System.out.println("  a  b  c  d  e  f  ");
 
         String gameStateStr = "unknown";
         switch (game.getGameState()) {
