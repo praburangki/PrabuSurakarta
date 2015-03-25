@@ -79,8 +79,8 @@ public class AiPlayerHandler implements IPlayerHandler {
         if(depth <= 0
                 || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) {
-//            return evaluate.evalue(map.map, color);
-            return 0;
+            return evaluate.evalue(map.map, color);
+//            return 0;
         }
         List<Move> moves = generateMoves(false);
         for (Move move : moves) {

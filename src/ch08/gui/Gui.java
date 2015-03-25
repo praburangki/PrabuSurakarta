@@ -47,7 +47,7 @@ public class Gui extends JPanel implements IPlayerHandler {
 
     private GuiPiece dragPiece;
 
-    private Move lastMove;
+    private Move lastMove, lastMove1;
     private Move currentMove;
 
     private boolean draggingGamePiecesEnabled;
@@ -171,6 +171,8 @@ public class Gui extends JPanel implements IPlayerHandler {
 
         // draw last move, if user is not dragging game piece
         if (!isUserDraggingPiece() && lastMove != null) {
+            System.out.println("Current Move : " + lastMove1);
+            System.out.println("Last Move : " + lastMove);
             int highlightSourceX = convertColumnToX(lastMove.sourceColumn);
             int highlightSourceY = convertRowToY(lastMove.sourceRow);
             int highlightTargetX = convertColumnToX(lastMove.targetColumn);
@@ -286,6 +288,7 @@ public class Gui extends JPanel implements IPlayerHandler {
         Move move = new Move(dragPiece.getPiece().getRow(), dragPiece.getPiece().getColumn(), targetRow, targetColumn);
         if (this.game.getMoveValidator().isMoveValid(move, false)) {
             this.currentMove = move;
+            this.lastMove1 = move;
         } else {
             dragPiece.resetToUnderlyingPiecePosition();
         }
@@ -311,6 +314,7 @@ public class Gui extends JPanel implements IPlayerHandler {
     public Move getMove() {
         this.draggingGamePiecesEnabled = true;
         Move moveForExecution = this.currentMove;
+        this.lastMove1 = this.currentMove;
         this.currentMove = null;
 
         return moveForExecution;
