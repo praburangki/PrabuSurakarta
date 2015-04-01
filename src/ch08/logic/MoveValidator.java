@@ -55,24 +55,30 @@ public class MoveValidator {
         if(debug) {
             System.out.println("temp move : " + temp.toString());
         }
-        return getAttackMoves(map, sourceRow, sourceColumn, color_temp, stack_temp) ||
+        getAttackMoves(map, sourceRow, sourceColumn, color_temp, stack_temp);
         getUnAttackMoves(map, sourceRow, sourceColumn, stack_temp, debug);
         
-//        if (debug) {
-//            System.out.println("Stack : " + stack_temp.toString());
-//        }
+        if (debug) {
+            System.out.println("Stack : " + stack_temp.toString());
+        }
         
-//        for (int i = 0; i < stack_temp.size(); i++) {
-//            Move m = (Move) stack_temp.get(i);
-//            if (temp.equals(m)) {
-//                if (debug) {
-//
-//                    isValid = true;
-//                } else {
-//                    return true;
-//                }
-//            }
-//        }
+        for (int i = 0; i < stack_temp.size(); i++) {
+            Move m = (Move) stack_temp.get(i);
+            if (temp.equals(m)) {
+                if (debug) {
+
+                    isValid = true;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        if (debug) {
+            return isValid;
+        } else {
+            return false;
+        }
     }
 
     public static final int[] outx = {1, 1, 1, 1, 1, 1, 0, 1, 2, 3, 4, 5, 4, 4, 4, 4, 4, 4, 5, 4, 3, 2, 1, 0};
@@ -84,7 +90,7 @@ public class MoveValidator {
     public final int[] stepx = {-1, -1, -1, 0, 0, 1, 1, 1};
     public final int[] stepy = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-    private boolean getAttackMoves(Map board, int x, int y, int color, Stack stack) {
+    private void getAttackMoves(Map board, int x, int y, int color, Stack stack) {
         int i, p;
         boolean[] vis = new boolean[LINE_LEN];
 
@@ -93,33 +99,28 @@ public class MoveValidator {
             if (x == outx[i] && y == outy[i]) {
                 p = getOutTarget(board, i, 1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, outx[p], outy[p]));
-                    return true;
-//                    vis[p] = true;
+                    stack.push(new Move(x, y, outx[p], outy[p]));
+                    vis[p] = true;
                 }
                 p = getOutTarget(board, i, -1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, outx[p], outy[p]));
-                    return true;
-//                    vis[p] = true;
+                    stack.push(new Move(x, y, outx[p], outy[p]));
+                    vis[p] = true;
                 }
             }
             if (x == inx[i] && y == iny[i]) {
                 p = getInTarget(board, i, 1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, inx[p], iny[p]));
-                    return true;
-//                    vis[p] = true;
+                    stack.push(new Move(x, y, inx[p], iny[p]));
+                    vis[p] = true;
                 }
                 p = getInTarget(board, i, -1, color);
                 if (p >= 0 && !vis[p]) {
-//                    stack.push(new Move(x, y, inx[p], iny[p]));
-                    return true;
-//                    vis[p] = true;
+                    stack.push(new Move(x, y, inx[p], iny[p]));
+                    vis[p] = true;
                 }
             }
         }
-        return false;
     }
 
     @SuppressWarnings("static-access")
@@ -181,18 +182,16 @@ public class MoveValidator {
     }
 
     @SuppressWarnings("static-access")
-    private boolean getUnAttackMoves(Map board, int x, int y, Stack stack, boolean debug) {
+    private void getUnAttackMoves(Map board, int x, int y, Stack stack, boolean debug) {
         int i, tx, ty;
 
         for (i = 0; i < 8; i++) {
             tx = x + stepx[i];
             ty = y + stepy[i];
             if (board.isInMap(tx, ty) && board.map[tx][ty] == board.NOSTONE) {
-//                stack.push(new Move(x, y, tx, ty));
-                return true;
+                stack.push(new Move(x, y, tx, ty));
             }
         }
-        return false;
     }
 
     public Map getMap() {
@@ -201,6 +200,12 @@ public class MoveValidator {
 
     public void setMap(Map map) {
         this.map = map;
+//        for (int i = 0; i < map.map.length; i++) {
+//            for (int j = 0; j < map.map.length; j++) {
+//                System.out.print(map.map[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
     }
 
     private void log(String message) {

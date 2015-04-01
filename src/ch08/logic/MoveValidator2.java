@@ -5,6 +5,7 @@
  */
 package ch08.logic;
 
+import ch08.console.ConsoleGui;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
@@ -13,14 +14,14 @@ import java.util.Stack;
  *
  * @author praburangki
  */
-public class MoveValidator3 {
+public class MoveValidator2 {
 
     private Game game;
     private Piece sourcePiece, targetPiece;
     private boolean debug;
     private Map map;
 
-    public MoveValidator3(Game game, Map map) {
+    public MoveValidator2(Game game, Map map) {
         this.game = game;
         this.map = map;
     }
