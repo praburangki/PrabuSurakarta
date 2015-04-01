@@ -5,7 +5,6 @@
  */
 package ch08.logic;
 
-import ch08.console.ConsoleGui;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
