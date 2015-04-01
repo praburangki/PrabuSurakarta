@@ -6,7 +6,6 @@
 package ch08;
 
 import ch08.ai.AiPlayerHandler;
-import ch08.ai.AiPlayerHandler2;
 import ch08.gui.Gui;
 import ch08.logic.Game;
 import ch08.logic.Piece;
@@ -24,7 +23,7 @@ public class Main {
         AiPlayerHandler ai = new AiPlayerHandler(game);
         ai.maxDepth = 4;
         
-        game.setPlayer(Piece.COLOR_WHITE, gui);
+        game.setPlayer(Piece.COLOR_WHITE, ai);
         game.setPlayer(Piece.COLOR_BLACK, gui);
         
         new Thread(game).start();

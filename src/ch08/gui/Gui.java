@@ -171,8 +171,6 @@ public class Gui extends JPanel implements IPlayerHandler {
 
         // draw last move, if user is not dragging game piece
         if (!isUserDraggingPiece() && lastMove != null) {
-            System.out.println("Current Move : " + lastMove1);
-            System.out.println("Last Move : " + lastMove);
             int highlightSourceX = convertColumnToX(lastMove.sourceColumn);
             int highlightSourceY = convertRowToY(lastMove.sourceRow);
             int highlightTargetX = convertColumnToX(lastMove.targetColumn);
