@@ -148,6 +148,8 @@ public class Evaluate {
             }
         }
 
+        //<editor-fold defaultstate="collapsed" desc="loop">
+        
         for (i = 0; i < 6; i++) {
             canup = canAttack(map, greenx[i], greeny[i], LEFT);
             canlow = canAttack(map, greenx[i], greeny[i], RIGHT);

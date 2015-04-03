@@ -5,7 +5,7 @@
  */
 package ch08;
 
-import ch08.ai.AiPlayerHandler;
+import ch08.ai.*;
 import ch08.gui.Gui;
 import ch08.logic.Game;
 import ch08.logic.Piece;
@@ -19,7 +19,6 @@ public class Main {
         Game game = new Game();
         
         Gui gui = new Gui(game);
-//        ConsoleGui console = new ConsoleGui(game);
         AiPlayerHandler ai = new AiPlayerHandler(game);
         ai.maxDepth = 4;
         

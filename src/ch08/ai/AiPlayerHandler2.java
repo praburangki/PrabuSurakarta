@@ -24,15 +24,15 @@ public class AiPlayerHandler2 implements IPlayerHandler {
     private Game game;
     private MoveValidator validator;
     private Map map;
-    private Evaluate evaluate;
+    private Evaluate3 evaluate;
 
-    public int maxDepth = 2;
+    public int maxDepth;
 
     public AiPlayerHandler2(Game game) {
-        evaluate = new Evaluate(game);
         this.game = game;
-        this.validator = this.game.getMoveValidator();
         this.map = game.getMap();
+        this.validator = this.game.getMoveValidator();
+        evaluate = new Evaluate3(game);
     }
 
     @Override
@@ -57,8 +57,7 @@ public class AiPlayerHandler2 implements IPlayerHandler {
         for(Move move : validMoves) {
             doMove(move);
             
-            int evaluationResult = -1 * alphaBeta(this.maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
-            System.out.println("the move : " + move + "; eval : " + evaluationResult);
+            int evaluationResult = -1 * negaScout(this.maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
             undoMove(move);
             if(evaluationResult > bestResult) {
                 bestResult = evaluationResult;
@@ -66,7 +65,7 @@ public class AiPlayerHandler2 implements IPlayerHandler {
             }
         }
         
-        System.out.println("done thinking! best move is " + bestMove + "with bestResult : " + bestResult);
+        System.out.println("done thinking! best move is " + bestMove);
         
         return bestMove;
     }
@@ -76,30 +75,32 @@ public class AiPlayerHandler2 implements IPlayerHandler {
         System.out.println("executed : " + move);
     }
 
-    private int alphaBeta(int depth, int alpha, int beta, int color) {
+    private int negaScout(int depth, int alpha, int beta, int color) {
         if(depth <= 0
                 || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) {
-            return evaluate.evalue(map.map, color);
-//            return 0;
+            return evaluate.evaluate(map.map, color, depth);
         }
+        int score = Integer.MIN_VALUE; // return value
+        int n = beta;
         List<Move> moves = generateMoves(false);
         for (Move move : moves) {
             doMove(move);
-            int value = -1 * alphaBeta(depth - 1, -1 * beta, -1 * alpha, color ^ 3);
-            undoMove(move);
-            if(value > alpha) {
-                alpha = value;
+            int cur = -1 * negaScout(depth - 1, -n, -alpha, color ^ 3);
+            if(cur > score) {
+                if(n == beta || depth <= 2) {
+                    score = cur;
+                }
+                else {
+                    score = -negaScout(depth - 1, -beta, -cur, color ^ 3);
+                }
             }
-            if (value >= beta) break;
+            if (score > alpha) alpha = score;
+            undoMove(move);
+            if(alpha >= beta) return alpha;
+            n = alpha + 1;
         }
-        return alpha;
-    }
-    
-    private int evaluateState() {
-        
-        
-        return 0;
+        return score;
     }
     
     private void undoMove(Move move) {
@@ -129,9 +130,7 @@ public class AiPlayerHandler2 implements IPlayerHandler {
                         testMove.targetRow = targetRow;
                         testMove.targetColumn = targetColumn;
                         
-                        if(debug) System.out.println("testing move : " + testMove);
-                        
-                        if(this.validator.isMoveValid(testMove, false)) {
+                        if(this.validator.isMoveValid(testMove)) {
                             validMoves.add(testMove.copy());
                         }
                     }

@@ -23,7 +23,7 @@ public class MoveValidator {
         this.map = map;
     }
 
-    public boolean isMoveValid(Move move, boolean debug) {
+    public boolean isMoveValid(Move move) {
 
         this.debug = debug;
         int sourceRow = move.sourceRow;
@@ -33,7 +33,9 @@ public class MoveValidator {
 
         sourcePiece = this.game.getNonCapturedPieceAtLocation(sourceRow, sourceColumn);
         targetPiece = this.game.getNonCapturedPieceAtLocation(targetRow, targetColumn);
-
+        
+        if(sourcePiece == null) return false;
+        
         boolean validPieceMove = isValidMove(move);
 
         return validPieceMove;

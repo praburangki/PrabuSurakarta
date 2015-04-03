@@ -155,9 +155,9 @@ public class Game implements Runnable {
             
             
 
-            if (move != null && this.moveValidator.isMoveValid(move, true)) {
+            if (move != null && this.moveValidator.isMoveValid(move)) {
                 break;
-            } else if (move != null && !this.moveValidator.isMoveValid(move, true)) {
+            } else if (move != null && !this.moveValidator.isMoveValid(move)) {
                 System.out.println("provided move was invalid : " + move);
 //                ConsoleGui.printCurrentGameState(this);
                 move = null;

@@ -198,7 +198,7 @@ public class Gui extends JPanel implements IPlayerHandler {
                     int sourceColumn = dragPiece.getPiece().getColumn();
 
                     // check if target location is valid
-                    if (moveValidator.isMoveValid(new Move(sourceRow, sourceColumn, row, column), false)) {
+                    if (moveValidator.isMoveValid(new Move(sourceRow, sourceColumn, row, column))) {
                         int highlightX = convertColumnToX(column);
                         int highlightY = convertRowToY(row);
 
@@ -284,7 +284,7 @@ public class Gui extends JPanel implements IPlayerHandler {
         int targetColumn = Gui.convertXToColumn(x);
 
         Move move = new Move(dragPiece.getPiece().getRow(), dragPiece.getPiece().getColumn(), targetRow, targetColumn);
-        if (this.game.getMoveValidator().isMoveValid(move, false)) {
+        if (this.game.getMoveValidator().isMoveValid(move)) {
             this.currentMove = move;
             this.lastMove1 = move;
         } else {

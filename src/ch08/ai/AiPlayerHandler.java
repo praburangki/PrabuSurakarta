@@ -26,7 +26,7 @@ public class AiPlayerHandler implements IPlayerHandler {
     private Map map;
     private Evaluate evaluate;
 
-    public int maxDepth = 2;
+    public int maxDepth;
 
     public AiPlayerHandler(Game game) {
         evaluate = new Evaluate(game);
@@ -80,7 +80,6 @@ public class AiPlayerHandler implements IPlayerHandler {
                 || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) {
             return evaluate.evalue(map.map, color);
-//            return 0;
         }
         List<Move> moves = generateMoves(false);
         for (Move move : moves) {
@@ -130,7 +129,7 @@ public class AiPlayerHandler implements IPlayerHandler {
                         
                         if(debug) System.out.println("testing move : " + testMove);
                         
-                        if(this.validator.isMoveValid(testMove, false)) {
+                        if(this.validator.isMoveValid(testMove)) {
                             validMoves.add(testMove.copy());
                         }
                     }
