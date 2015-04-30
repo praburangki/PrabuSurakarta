@@ -191,6 +191,8 @@ public class Gui extends JPanel implements IPlayerHandler {
         if (isUserDraggingPiece()) {
             List<Move> possibleMoves = new ArrayList<>();
             MoveValidator moveValidator = game.getMoveValidator();
+            
+            
             // iterate the complete board to check if target locations are valid
             for (int column = Piece.COLUMN_A; column <= Piece.COLUMN_F; column++) {
                 for (int row = Piece.ROW_1; row <= Piece.ROW_6; row++) {
