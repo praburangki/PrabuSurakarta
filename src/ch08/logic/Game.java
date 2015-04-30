@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ch08.logic;
 
 import ch08.ai.Evaluate;
 import ch08.console.ConsoleGui;
 import java.util.*;
 
-/**
- *
- * @author Prabu Rangki
- */
 public class Game implements Runnable {
 
     public int gameState = GAME_STATE_WHITE;
@@ -21,7 +12,6 @@ public class Game implements Runnable {
     public static final int GAME_STATE_END_BLACK_WON = 2;
     public static final int GAME_STATE_END_WHITE_WON = 3;
 
-    // 0 = bottom, size = top
     public List<Piece> pieces = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
 

@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ch08.logic;
 
 import java.util.Arrays;
 
-/**
- *
- * @author Prabu Rangki
- */
 public class Map {
 
     public static final int MAXSIZE = 6;
