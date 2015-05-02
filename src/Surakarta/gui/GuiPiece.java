@@ -17,15 +17,11 @@ public class GuiPiece {
         this.img = img;
         this.piece = piece;
 
-        this.resetToUnderlyingPiecePosition();
+        resetToUnderlyingPiecePosition();
     }
 
     public Image getImg() {
         return img;
-    }
-
-    public Piece getPiece() {
-        return piece;
     }
 
     public int getX() {
@@ -53,7 +49,7 @@ public class GuiPiece {
     }
     
     public int getColor() {
-        return this.piece.getColor();
+        return piece.getColor();
     }
     
     @Override
@@ -62,11 +58,15 @@ public class GuiPiece {
     }
     
     public void resetToUnderlyingPiecePosition() {
-        this.x = Gui.convertColumnToX(piece.getColumn());
-        this.y = Gui.convertRowToY(piece.getRow());
+        x = Gui.convertColumnToX(piece.getColumn());
+        y = Gui.convertRowToY(piece.getRow());
+    }
+    
+    public Piece getPiece() {
+        return piece;
     }
     
     public boolean isCaptured() {
-        return this.piece.isCaptured();
+        return piece.isCaptured();
     }
 }

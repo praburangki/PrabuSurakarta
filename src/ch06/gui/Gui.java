@@ -1,24 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ch06.gui;
 
-import ch06.logic.Game;
-import ch06.logic.Move;
-import ch06.logic.MoveValidator;
-import ch06.logic.Piece;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
+import ch06.logic.*;
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.util.Vector;
+import javax.swing.*;
 
 /**
  *
@@ -42,15 +32,13 @@ public class Gui extends JPanel {
     private static final int DRAG_TARGET_SQUARE_START_Y = BOARD_START_Y - (int) (PIECE_HEIGHT / 2.0);
 
     private Image imgBackground;
-    private JLabel lblGameState;
+    private JLabel labelGameState;
 
     private Game game;
     private List<GuiPiece> guiPieces = new ArrayList<GuiPiece>();
-
-    private GuiPiece dragPiece;
-
+    private GuiPiece dragPiece;					
     private Move lastMove;
-
+    
     public Gui() {
         setLayout(null);
 
@@ -67,11 +55,11 @@ public class Gui extends JPanel {
         addMouseListener(listener);
         addMouseMotionListener(listener);
 
-        String labelTxt = getGameStateAsText();
-        lblGameState = new JLabel(labelTxt);
-        lblGameState.setBounds(0, 30, 80, 30);
-        lblGameState.setForeground(Color.white);
-        this.add(lblGameState);
+        String labelText = this.getGameStateAsText();
+        this.labelGameState = new JLabel(labelText);
+        labelGameState.setBounds(0, 30, 80, 30);
+        labelGameState.setForeground(Color.WHITE);
+        this.add(labelGameState);
 
         JFrame f = new JFrame();
         f.setVisible(true);
@@ -82,18 +70,13 @@ public class Gui extends JPanel {
     }
 
     private String getGameStateAsText() {
-        String state = "unknown";
-        switch (game.getGameState()) {
-            case Game.GAME_STATE_BLACK:
-                state = "black";
-                break;
-            case Game.GAME_STATE_END:
-                state = "end";
-                break;
-            case Game.GAME_STATE_WHITE:
-                state = "white";
-                break;
+        String state = "";
+        switch(game.getGameState()) {
+            case Game.GAME_STATE_BLACK : state = "black"; break;
+            case Game.GAME_STATE_END : state = "end"; break;
+            case Game.GAME_STATE_WHITE : state = "white"; break;
         }
+        
         return state;
     }
 
@@ -104,12 +87,11 @@ public class Gui extends JPanel {
     }
 
     private Image getImageForPiece(int color) {
-        String filename = "";
-        filename += (color == Piece.COLOR_WHITE ? "w" : "b");
+        String fileName = "";
+        fileName += (color == Piece.COLOR_WHITE ? "w" : "b");
+        fileName += ".png";
 
-        filename += ".png";
-
-        URL urlPieceImg = getClass().getResource("/img/" + filename);
+        URL urlPieceImg = getClass().getResource("/img/" + fileName);
 
         return new ImageIcon(urlPieceImg).getImage();
     }
@@ -167,7 +149,7 @@ public class Gui extends JPanel {
             }
         }
 
-        lblGameState.setText(this.getGameStateAsText());
+        labelGameState.setText(this.getGameStateAsText());
     }
 
     /**
@@ -244,10 +226,9 @@ public class Gui extends JPanel {
             System.out.println("moving piece to " + targetRow + "/" + targetColumn);
             Move move = new Move(dragPiece.getPiece().getRow(), dragPiece.getPiece().getColumn(), targetRow, targetColumn);
             boolean wasMoveSuccessfull = game.movePiece(move);
-
-            if (wasMoveSuccessfull) {
-                lastMove = move;
-            }
+            
+            if(wasMoveSuccessfull) lastMove = move;
+            
             dragPiece.resetToUnderlyingPiecePosition();
         }
     }

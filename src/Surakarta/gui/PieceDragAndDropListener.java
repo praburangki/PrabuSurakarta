@@ -15,7 +15,6 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
     private List<GuiPiece> guiPieces;
     private Gui gui;
 
-    private GuiPiece dragPiece;
     private int dragOffsetX, dragOffsetY;
 
     public PieceDragAndDropListener(List<GuiPiece> guiPieces, Gui gui) {
@@ -28,8 +27,8 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
         int x = e.getPoint().x;
         int y = e.getPoint().y;
 
-        for (int i = this.guiPieces.size() - 1; i >= 0; i--) {
-            GuiPiece guiPiece = this.guiPieces.get(i);
+        for (int i = guiPieces.size() - 1; i >= 0; i--) {
+            GuiPiece guiPiece = guiPieces.get(i);
             if (guiPiece.isCaptured()) {
                 continue;
             }
@@ -42,15 +41,16 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
 
                     dragOffsetX = x - guiPiece.getX();
                     dragOffsetY = y - guiPiece.getY();
-                    dragPiece = guiPiece;
+                    gui.setDragPiece(guiPiece);
+                    gui.repaint();
                     break;
                 }
             }
         }
 
-        if (this.dragPiece != null) {
-            this.guiPieces.remove(this.dragPiece);
-            this.guiPieces.add(this.dragPiece);
+        if (gui.getDragPiece() != null) {
+            guiPieces.remove(gui.getDragPiece());
+            guiPieces.add(gui.getDragPiece());
         }
     }
 
@@ -63,28 +63,27 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (this.dragPiece != null) {
-            int x = e.getPoint().x - this.dragOffsetX;
-            int y = e.getPoint().y - this.dragOffsetY;
+        if (gui.getDragPiece() != null) {
+            int x = e.getPoint().x - dragOffsetX;
+            int y = e.getPoint().y - dragOffsetY;
 
-            gui.setNewPieceLocation(this.dragPiece, x, y);
-            this.gui.repaint();
-            this.dragPiece = null;
+            gui.setNewPieceLocation(gui.getDragPiece(), x, y);
+            gui.repaint();
+            gui.setDragPiece(null);
         }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (this.dragPiece != null) {
-            int x = e.getPoint().x - this.dragOffsetX;
-            int y = e.getPoint().y - this.dragOffsetY;
-            System.out.println("row : " + Gui.convertYToRow(y)
-                    + " column : " + Gui.convertXToColumn(x));
+        if (gui.getDragPiece() != null) {
+            int x = e.getPoint().x - dragOffsetX;
+            int y = e.getPoint().y - dragOffsetY;
 
-            this.dragPiece.setX(x);
-            this.dragPiece.setY(y);
-
-            this.gui.repaint();
+            GuiPiece dragPiece = gui.getDragPiece();
+            dragPiece.setX(x);
+            dragPiece.setY(y);
+            
+            gui.repaint();
         }
     }
 

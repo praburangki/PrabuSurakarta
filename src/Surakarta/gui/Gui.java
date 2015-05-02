@@ -1,17 +1,14 @@
 package Surakarta.gui;
 
 import Surakarta.logic.*;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.util.Vector;
+import javax.swing.*;
 
 /**
  *
@@ -39,27 +36,24 @@ public class Gui extends JPanel {
 
     private Game game;
     private List<GuiPiece> guiPieces = new ArrayList<GuiPiece>();
-
+    private GuiPiece dragPiece;					
+    private Move lastMove;
+    
     public Gui() {
-        this.setLayout(null);
+        setLayout(null);
 
         URL urlBackgroundImg = getClass().getResource("/img/surakarta.png");
-        this.imgBackground = new ImageIcon(urlBackgroundImg).getImage();
+        imgBackground = new ImageIcon(urlBackgroundImg).getImage();
 
-        this.game = new Game();
+        game = new Game();
 
-        for (Piece piece : this.game.getPieces()) {
+        for (Piece piece : game.getPieces()) {
             createAndAddGuiPiece(piece);
         }
 
-        PieceDragAndDropListener listener = new PieceDragAndDropListener(this.guiPieces, this);
-        this.addMouseListener(listener);
-        this.addMouseMotionListener(listener);
-
-        JButton buttonChangeGameState = new JButton("Change");
-        buttonChangeGameState.addActionListener(new ChangeGameStateButtonActionListener(this));
-        buttonChangeGameState.setBounds(0, 0, 80, 30);
-        this.add(buttonChangeGameState);
+        PieceDragAndDropListener listener = new PieceDragAndDropListener(guiPieces, this);
+        addMouseListener(listener);
+        addMouseMotionListener(listener);
 
         String labelText = this.getGameStateAsText();
         this.labelGameState = new JLabel(labelText);
@@ -72,17 +66,24 @@ public class Gui extends JPanel {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(this);
         f.setResizable(false);
-        f.setSize(this.imgBackground.getWidth(null), this.imgBackground.getHeight(null));
+        f.setSize(imgBackground.getWidth(null), imgBackground.getHeight(null));
     }
 
     private String getGameStateAsText() {
-        return this.game.getGameState() == Game.GAME_STATE_BLACK ? "black" : "white";
+        String state = "";
+        switch(game.getGameState()) {
+            case Game.GAME_STATE_BLACK : state = "black"; break;
+            case Game.GAME_STATE_END : state = "end"; break;
+            case Game.GAME_STATE_WHITE : state = "white"; break;
+        }
+        
+        return state;
     }
 
     private void createAndAddGuiPiece(Piece piece) {
-        Image img = this.getImageForPiece(piece.getColor());
+        Image img = getImageForPiece(piece.getColor());
         GuiPiece guiPiece = new GuiPiece(img, piece);
-        this.guiPieces.add(guiPiece);
+        guiPieces.add(guiPiece);
     }
 
     private Image getImageForPiece(int color) {
@@ -97,26 +98,68 @@ public class Gui extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.drawImage(this.imgBackground, 0, 0, null);
-
-        for (GuiPiece guiPiece : this.guiPieces) {
+        g.drawImage(imgBackground, 0, 0, null);
+        for (GuiPiece guiPiece : guiPieces) {
             if (!guiPiece.isCaptured()) {
                 g.drawImage(guiPiece.getImg(), guiPiece.getX(), guiPiece.getY(), null);
             }
         }
+
+        // draw last move, if user is not dragging game piece
+        if (!isUserDraggingPiece() && lastMove != null) {
+            int highlightSourceX = convertColumnToX(lastMove.sourceColumn);
+            int highlightSourceY = convertRowToY(lastMove.sourceRow);
+            int highlightTargetX = convertColumnToX(lastMove.targetColumn);
+            int highlightTargetY = convertRowToY(lastMove.targetRow);
+
+            g.setColor(Color.BLACK);
+            g.drawOval(highlightSourceX + 1, highlightSourceY + 1, 25, 25);
+            g.drawOval(highlightTargetX + 1, highlightTargetY + 1, 25, 25);
+
+            g.setColor(Color.RED);
+            g.drawOval(highlightSourceX, highlightSourceY, 25, 25);
+            g.drawOval(highlightTargetX, highlightTargetY, 25, 25);
+            //g.drawLine(highlightSourceX + SQUARE_WIDTH / 2, highlightSourceY + SQUARE_HEIGHT / 2, 
+            //      highlightTargetX + SQUARE_WIDTH / 2, highlightTargetY + SQUARE_HEIGHT / 2);
+        }
+
+        if (isUserDraggingPiece()) {
+            MoveValidator moveValidator = game.getMoveValidator();
+            int sourceRow = dragPiece.getPiece().getRow();
+            int sourceColumn = dragPiece.getPiece().getColumn();
+            Vector v = moveValidator.getLegalMoves(sourceRow, sourceColumn);
+            Enumeration e = v.elements();
+            System.out.println("v : " + v.toString());
+            if(e.hasMoreElements()) {
+                do {
+                    Move move = (Move) e.nextElement();
+                    int highlightX = convertColumnToX(move.targetColumn);
+                    int highlightY = convertRowToY(move.targetRow);
+                    
+                    g.setColor(Color.BLACK);
+                    g.drawOval(highlightX + 1, highlightY + 1, 25, 25);
+                    g.setColor(Color.GREEN);
+                    g.drawOval(highlightX, highlightY, 25, 25);
+                } while (e.hasMoreElements());
+            }
+        }
+
+        labelGameState.setText(this.getGameStateAsText());
+    }
+
+    /**
+     * @return true if user is currently dragging a game piece
+     */
+    private boolean isUserDraggingPiece() {
+        return dragPiece != null;
     }
 
     public static void main(String[] args) {
         new Gui();
     }
 
-    public void changeGameState() {
-        this.game.changeGameState();
-        this.labelGameState.setText(this.getGameStateAsText());
-    }
-
     public int getGameState() {
-        return this.game.getGameState();
+        return game.getGameState();
     }
 
     public static int convertColumnToX(int column) {
@@ -138,14 +181,38 @@ public class Gui extends JPanel {
     public void setNewPieceLocation(GuiPiece dragPiece, int x, int y) {
         int targetRow = Gui.convertYToRow(y);
         int targetColumn = Gui.convertXToColumn(x);
-        
-        if(targetRow < Piece.ROW_1 || targetRow > Piece.ROW_6
-                || targetColumn < Piece.COLUMN_A || targetColumn > Piece.COLUMN_F) {
+
+        if (targetRow < Piece.ROW_1 || targetRow > Piece.ROW_6 || targetColumn < Piece.COLUMN_A
+                || targetColumn > Piece.COLUMN_F) {
             dragPiece.resetToUnderlyingPiecePosition();
         } else {
-            System.out.println("Moving piece to " + targetRow + "/" + targetColumn);
-            this.game.movePiece(dragPiece.getPiece().getRow(), dragPiece.getPiece().getColumn(), targetRow, targetColumn);
+            System.out.println("moving piece to " + targetRow + "/" + targetColumn);
+            Move move = new Move(dragPiece.getPiece().getRow(), dragPiece.getPiece().getColumn(), targetRow, targetColumn);
+            boolean wasMoveSuccessfull = game.movePiece(move);
+            
+            if(wasMoveSuccessfull) lastMove = move;
+            
             dragPiece.resetToUnderlyingPiecePosition();
         }
+        
+        /*
+        System.out.println("Board white");
+        for (int i = 0; i < 6; i++) {
+            System.out.println(Arrays.toString(game.whites[i]));
+        }
+        
+        System.out.println("\nBoard black");
+        for (int i = 0; i < 6; i++) {
+            System.out.println(Arrays.toString(game.blacks[i]));
+        }*/
     }
+
+    public GuiPiece getDragPiece() {
+        return this.dragPiece;
+    }
+
+    public void setDragPiece(GuiPiece dragPiece) {
+        this.dragPiece = dragPiece;
+    }
+    
 }

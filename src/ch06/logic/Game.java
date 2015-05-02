@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ch06.logic;
 
 import java.util.*;
@@ -17,9 +12,7 @@ public class Game {
     public static final int GAME_STATE_WHITE = 0;
     public static final int GAME_STATE_BLACK = 1;
     public static final int GAME_STATE_END = 2;
-
     
-    // 0 = bottom, size = top
     private List<Piece> pieces = new ArrayList<Piece>();
     private MoveValidator moveValidator;
     private Map map;
@@ -81,35 +74,23 @@ public class Game {
         pieces.add(piece);
     }
 
-    /**
-     * Move piece to the specified location. If the target location is occupied
-     * by an opponent piece, that piece is marked as 'captured'
-     *
-     * @param sourceRow the source row (Piece.ROW_..) of the piece to move
-     * @param sourceColumn the source column (Piece.COLUMN_..) of the piece to
-     * move
-     * @param targetRow the target row (Piece.ROW_..)
-     * @param targetColumn the target column (Piece.COLUMN_..)
-     */
     public boolean movePiece(Move move) {
         if (!moveValidator.isMoveValid(move)) {
             System.out.println("move invalid");
             return false;
         }
-
+        
         Piece piece = getNonCapturedPieceAtLocation(move.sourceRow, move.sourceColumn);
-//        map.map[move.sourceRow][move.sourceColumn] = 0;
+
         int opponentColor = piece.getColor() == Piece.COLOR_BLACK ? Piece.COLOR_WHITE : Piece.COLOR_BLACK;
         if (isNonCapturedPieceAtLocation(opponentColor, move.targetRow, move.targetColumn)) {
             Piece opponentPiece = getNonCapturedPieceAtLocation(move.targetRow, move.targetColumn);
             opponentPiece.isCaptured(true);
-
         }
 
         piece.setRow(move.targetRow);
         piece.setColumn(move.targetColumn);
-//        map.map[piece.getRow()][piece.getColumn()] = piece.getColor();
-
+        
         if (isGameEndConditionReached()) {
             gameState = GAME_STATE_END;
         } else {
@@ -134,18 +115,10 @@ public class Game {
         return blackNum == 0 || whiteNum == 0;
     }
 
-    /**
-     * returns the first piece at the specified location that is not marked as
-     * 'captured'.
-     *
-     * @param row one of Piece.ROW_..
-     * @param column one of Piece.COLUMN_..
-     * @return the first not captured piece at the specified location
-     */
-    public Piece getNonCapturedPieceAtLocation(int row, int col) {
+    public Piece getNonCapturedPieceAtLocation(int row, int column) {
         for (Piece piece : this.pieces) {
             if (piece.getRow() == row
-                    && piece.getColumn() == col
+                    && piece.getColumn() == column
                     && piece.isCaptured() == false) {
                 return piece;
             }
@@ -153,20 +126,10 @@ public class Game {
         return null;
     }
 
-    /**
-     * Checks whether there is a piece at the specified location that is not
-     * marked as 'captured' and has the specified color.
-     *
-     * @param color one of Piece.COLOR_..
-     * @param row one of Piece.ROW_..
-     * @param column on of Piece.COLUMN_..
-     * @return true, if the location contains a not-captured piece of the
-     * specified color
-     */
-    private boolean isNonCapturedPieceAtLocation(int color, int row, int col) {
-        for (Piece piece : pieces) {
+    private boolean isNonCapturedPieceAtLocation(int color, int row, int column) {
+        for (Piece piece : this.pieces) {
             if (piece.getRow() == row
-                    && piece.getColumn() == col
+                    && piece.getColumn() == column
                     && !piece.isCaptured()
                     && piece.getColor() == color) {
                 return true;
@@ -176,19 +139,12 @@ public class Game {
         return false;
     }
 
-    /**
-     * Checks whether there is a non-captured piece at the specified location
-     *
-     * @param row one of Piece.ROW_..
-     * @param column on of Piece.COLUMN_..
-     * @return true, if the location contains a piece
-     */
     public boolean isNonCapturedPieceAtLocation(int row, int column) {
         for (Piece piece : this.pieces) {
-            if (piece.getRow() == row && piece.getColumn() == column
-                    && piece.isCaptured() == false) {
+            if (piece.getRow() == row
+                    && piece.getColumn() == column
+                    && !piece.isCaptured())
                 return true;
-            }
         }
         return false;
     }
@@ -203,12 +159,10 @@ public class Game {
 
     public void changeGameState() {
         if (isGameEndConditionReached()) {
-
-            if (this.gameState == Game.GAME_STATE_BLACK) {
+            if (this.gameState == Game.GAME_STATE_BLACK)
                 System.out.println("Game over! Black won!");
-            } else {
+            else
                 System.out.println("Game over! White won!");
-            }
 
             this.gameState = Game.GAME_STATE_END;
             return;
