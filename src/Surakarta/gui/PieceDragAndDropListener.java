@@ -69,7 +69,6 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
 
             gui.setNewPieceLocation(gui.getDragPiece(), x, y);
             gui.repaint();
-            gui.setDragPiece(null);
         }
     }
 

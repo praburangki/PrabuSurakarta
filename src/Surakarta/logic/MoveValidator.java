@@ -218,11 +218,11 @@ public class MoveValidator {
         Vector dir = new Vector(9);
         boolean white = game.isWhite(x, y);
 
-        int i = x - 1; // i = 3
-        if (i < x + 2) { // i < 6
+        int i = x - 1;
+        if (i < x + 2) {
             do {
-                int j = y - 1; // j = 0
-                if (j < y + 2) { // j < 3 
+                int j = y - 1;
+                if (j < y + 2) {
                     do {
                         dir.addElement(new Move(x, y, i, j, white, false));
                         j++;

@@ -115,7 +115,11 @@ public class Game {
         return blackNum == 0 || whiteNum == 0;
     }
 
+<<<<<<< HEAD
     public Piece getNonCapturedPieceAtLocation(int row, int column) {
+=======
+    public Piece getNonCapturedPieceAtLocation(int row, int col) {
+>>>>>>> 9159d6c299a2d4c3e62e8b39c879bc8829bd51bc
         for (Piece piece : this.pieces) {
             if (piece.getRow() == row
                     && piece.getColumn() == column
@@ -125,9 +129,15 @@ public class Game {
         }
         return null;
     }
+<<<<<<< HEAD
 
     private boolean isNonCapturedPieceAtLocation(int color, int row, int column) {
         for (Piece piece : this.pieces) {
+=======
+    
+    private boolean isNonCapturedPieceAtLocation(int color, int row, int col) {
+        for (Piece piece : pieces) {
+>>>>>>> 9159d6c299a2d4c3e62e8b39c879bc8829bd51bc
             if (piece.getRow() == row
                     && piece.getColumn() == column
                     && !piece.isCaptured()

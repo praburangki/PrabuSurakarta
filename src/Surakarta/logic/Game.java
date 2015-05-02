@@ -52,6 +52,7 @@ public class Game {
         }
         
         Piece piece = getNonCapturedPieceAtLocation(move.sourceRow, move.sourceColumn);
+
         move.isWhite = piece.getColor() == Piece.COLOR_WHITE;
 
         int opponentColor = piece.getColor() == Piece.COLOR_BLACK ? Piece.COLOR_WHITE : Piece.COLOR_BLACK;
@@ -99,9 +100,7 @@ public class Game {
 
     public Piece getNonCapturedPieceAtLocation(int row, int column) {
         for (Piece piece : this.pieces) {
-            if (piece.getRow() == row
-                    && piece.getColumn() == column
-                    && piece.isCaptured() == false) {
+            if (piece.getRow() == row && piece.getColumn() == column && piece.isCaptured() == false) {
                 return piece;
             }
         }
@@ -122,9 +121,7 @@ public class Game {
     
     public boolean isNonCapturedPieceAtLocation(int row, int column) {
         for (Piece piece : this.pieces) {
-            if (piece.getRow() == row
-                    && piece.getColumn() == column
-                    && !piece.isCaptured())
+            if (piece.getRow() == row && piece.getColumn() == column && !piece.isCaptured())
                 return true;
         }
         return false;
@@ -155,6 +152,9 @@ public class Game {
                 break;
             case GAME_STATE_WHITE:
                 gameState = GAME_STATE_BLACK;
+                break;
+            case GAME_STATE_END:
+                // don't change anymore
                 break;
             default:
                 throw new IllegalStateException("unknown game state : " + gameState);

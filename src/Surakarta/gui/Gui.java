@@ -66,7 +66,9 @@ public class Gui extends JPanel {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(this);
         f.setResizable(false);
+
         f.setSize(imgBackground.getWidth(null), imgBackground.getHeight(null));
+
     }
 
     private String getGameStateAsText() {
@@ -104,8 +106,7 @@ public class Gui extends JPanel {
                 g.drawImage(guiPiece.getImg(), guiPiece.getX(), guiPiece.getY(), null);
             }
         }
-
-        // draw last move, if user is not dragging game piece
+        
         if (!isUserDraggingPiece() && lastMove != null) {
             int highlightSourceX = convertColumnToX(lastMove.sourceColumn);
             int highlightSourceY = convertRowToY(lastMove.sourceRow);
@@ -129,7 +130,7 @@ public class Gui extends JPanel {
             int sourceColumn = dragPiece.getPiece().getColumn();
             Vector v = moveValidator.getLegalMoves(sourceRow, sourceColumn);
             Enumeration e = v.elements();
-            System.out.println("v : " + v.toString());
+            
             if(e.hasMoreElements()) {
                 do {
                     Move move = (Move) e.nextElement();
@@ -195,16 +196,6 @@ public class Gui extends JPanel {
             dragPiece.resetToUnderlyingPiecePosition();
         }
         
-        /*
-        System.out.println("Board white");
-        for (int i = 0; i < 6; i++) {
-            System.out.println(Arrays.toString(game.whites[i]));
-        }
-        
-        System.out.println("\nBoard black");
-        for (int i = 0; i < 6; i++) {
-            System.out.println(Arrays.toString(game.blacks[i]));
-        }*/
     }
 
     public GuiPiece getDragPiece() {
