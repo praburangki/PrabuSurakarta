@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group/>
+=======
+        <group>
+            <file>file:/Users/praburangki/Documents/Skripsi%202/SurakartaOOP/Surakarta/src/ch08/ai/Evaluate.java</file>
+            <file>file:/Users/praburangki/Documents/Skripsi%202/SurakartaOOP/Surakarta/src/ch08/ai/Evaluate3.java</file>
+            <file>file:/Users/praburangki/Documents/Skripsi%202/SurakartaOOP/Surakarta/src/ch08/ai/AiPlayerHandler.java</file>
+            <file>file:/Users/praburangki/Documents/Skripsi%202/SurakartaOOP/Surakarta/src/ch08/logic/MoveValidator.java</file>
+            <file>file:/Users/praburangki/Documents/Skripsi%202/SurakartaOOP/Surakarta/src/ch08/ai/AiPlayerHandler2.java</file>
+            <file>file:/Users/praburangki/Documents/Skripsi%202/SurakartaOOP/Surakarta/src/ch08/Main.java</file>
+        </group>
+>>>>>>> e35e65903a7db7690e173952b7cf09a98e7f09d6
     </open-files>
 </project-private>
