@@ -14,6 +14,8 @@ public class Move {
     public boolean isWhite;
     public boolean isBlack;
     public boolean isCapture;
+	public int score;
+    public Piece capturedPiece;
 
     public Move(int sourceRow, int sourceColumn, int targetRow, int targetColumn) {
         this.sourceRow = sourceRow;
@@ -53,5 +55,9 @@ public class Move {
     @Override
     public String toString() {
         return "(" + sourceRow + "," + sourceColumn + ")->(" + targetRow + "," + targetColumn + ")";
+    }
+    
+    public Move copy() {
+        return new Move(sourceRow, sourceColumn, targetRow, targetColumn);
     }
 }

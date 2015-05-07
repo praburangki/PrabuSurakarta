@@ -1,14 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Surakarta;
+
+import Surakarta.gui.Gui;
+import Surakarta.logic.AiPlayerHandler;
+import Surakarta.logic.Game;
+import Surakarta.logic.Piece;
 
 /**
  *
  * @author praburangki
  */
 public class Main {
-    
+    public static void main(String[] args) {
+        Game game = new Game();
+        Gui gui = new Gui(game);
+        
+        AiPlayerHandler ai = new AiPlayerHandler(game);
+        ai.maxDepth = 1;
+        
+        game.setPlayer(Piece.COLOR_WHITE, gui);
+        game.setPlayer(Piece.COLOR_BLACK, ai);
+        
+        new Thread(game).start();
+    }
 }

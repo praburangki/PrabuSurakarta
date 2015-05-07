@@ -24,6 +24,10 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (!this.gui.isDraggingGamePiecesEnabled()) {
+            return;
+        }
+
         int x = e.getPoint().x;
         int y = e.getPoint().y;
 
@@ -38,19 +42,18 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
                         && guiPiece.getColor() == Piece.COLOR_WHITE)
                         || (gui.getGameState() == Game.GAME_STATE_BLACK
                         && guiPiece.getColor() == Piece.COLOR_BLACK)) {
-
-                    dragOffsetX = x - guiPiece.getX();
-                    dragOffsetY = y - guiPiece.getY();
-                    gui.setDragPiece(guiPiece);
-                    gui.repaint();
+                    this.dragOffsetX = x - guiPiece.getX();
+                    this.dragOffsetY = y - guiPiece.getY();
+                    this.gui.setDragPiece(guiPiece);
+                    this.gui.repaint();
                     break;
                 }
             }
         }
-
-        if (gui.getDragPiece() != null) {
-            guiPieces.remove(gui.getDragPiece());
-            guiPieces.add(gui.getDragPiece());
+        
+        if (this.gui.getDragPiece() != null) {
+            this.guiPieces.remove(this.gui.getDragPiece());
+            this.guiPieces.add(this.gui.getDragPiece());
         }
     }
 
@@ -69,6 +72,7 @@ public class PieceDragAndDropListener implements MouseListener, MouseMotionListe
 
             gui.setNewPieceLocation(gui.getDragPiece(), x, y);
             gui.repaint();
+            gui.setDragPiece(null);
         }
     }
 

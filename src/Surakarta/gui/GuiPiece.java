@@ -17,7 +17,7 @@ public class GuiPiece {
         this.img = img;
         this.piece = piece;
 
-        resetToUnderlyingPiecePosition();
+        this.resetToUnderlyingPiecePosition();
     }
 
     public Image getImg() {

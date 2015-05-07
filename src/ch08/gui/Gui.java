@@ -112,41 +112,28 @@ public class Gui extends JPanel implements IPlayerHandler {
                 state = "white";
                 break;
         }
+        
         return state;
     }
 
-    /**
-     * create a game piece
-     *
-     * @param piece that is going to be created and added to the list
-     */
     private void createAndAddGuiPiece(Piece piece) {
         Image img = getImageForPiece(piece.getColor());
         GuiPiece guiPiece = new GuiPiece(img, piece);
         guiPieces.add(guiPiece);
     }
 
-    /**
-     * load image for given color. This method translates the color information
-     * into a filename and loads that particular file.
-     *
-     * @param color color constant
-     * @return image
-     */
     private Image getImageForPiece(int color) {
-        String filename = "";
-        filename += (color == Piece.COLOR_WHITE ? "w" : "b");
+        String fileName = "";
+        fileName += (color == Piece.COLOR_WHITE ? "w" : "b");
+        fileName += ".png";
 
-        filename += ".png";
-
-        URL urlPieceImg = getClass().getResource("/img/" + filename);
+        URL urlPieceImg = getClass().getResource("/img/" + fileName);
 
         return new ImageIcon(urlPieceImg).getImage();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        // draw background
         g.drawImage(imgBackground, 0, 0, null);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         int x1 = 360, y1 = 145;
@@ -231,54 +218,22 @@ public class Gui extends JPanel implements IPlayerHandler {
         return game.getGameState();
     }
 
-    /**
-     * convert logical column into x coordinate
-     *
-     * @param column
-     * @return x coordinate for column
-     */
     public static int convertColumnToX(int column) {
         return PIECES_START_X + SQUARE_WIDTH * column;
     }
 
-    /**
-     * convert logical row into y coordinate
-     *
-     * @param row
-     * @return y coordinate for row
-     */
     public static int convertRowToY(int row) {
         return PIECES_START_Y + SQUARE_HEIGHT * row;
     }
 
-    /**
-     * convert x coordinate into logical column
-     *
-     * @param x
-     * @return logical column for x coordinate
-     */
     public static int convertXToColumn(int x) {
         return (x - DRAG_TARGET_SQUARE_START_X) / SQUARE_WIDTH;
     }
 
-    /**
-     * convert y coordinate into logical row
-     *
-     * @param y
-     * @return logical row for y coordinate
-     */
     public static int convertYToRow(int y) {
         return (y - DRAG_TARGET_SQUARE_START_Y) / SQUARE_HEIGHT;
     }
-
-    /**
-     * change location of given piece, if the location is valid. If the location
-     * is not valid, move the piece back to its original position.
-     *
-     * @param dragPiece
-     * @param x
-     * @param y
-     */
+    
     public void setNewPieceLocation(GuiPiece dragPiece, int x, int y) {
         int targetRow = Gui.convertYToRow(y);
         int targetColumn = Gui.convertXToColumn(x);
@@ -301,9 +256,6 @@ public class Gui extends JPanel implements IPlayerHandler {
         this.dragPiece = guiPiece;
     }
 
-    /**
-     * @return the gui piece that the user is currently dragging
-     */
     public GuiPiece getDragPiece() {
         return this.dragPiece;
     }
