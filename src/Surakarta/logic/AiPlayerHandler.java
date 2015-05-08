@@ -14,10 +14,11 @@ public class AiPlayerHandler implements IPlayerHandler {
     
     public int maxDepth;
 
-    public AiPlayerHandler(Game game) {
+    public AiPlayerHandler(Game game, boolean enemy) {
         this.game = game;
         this.moveValidator = this.game.getMoveValidator();
-        evaluate = new Evaluate(game);
+        if(enemy) evaluate = new Evaluate(game);
+        else evaluate = new EvaluateEnemy(game);
     }
     
     @Override

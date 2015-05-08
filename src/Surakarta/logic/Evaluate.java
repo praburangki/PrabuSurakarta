@@ -1,7 +1,6 @@
 package Surakarta.logic;
 
 import java.awt.Point;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -72,8 +71,11 @@ public class Evaluate {
                         do {                            
                             targetPoint.x = p2.x + direction[j][0];
                             targetPoint.y = p2.y + direction[j][1];
-                            if (game.isWhite(targetPoint.x, targetPoint.y)) enemy++;
-                            else safe++;
+                            if(isInMap(targetPoint.x, targetPoint.y)) {
+                                if (game.isWhite(targetPoint.x, targetPoint.y)) enemy++;
+                                else safe++;
+                            }
+                            j++;
                         } while (j < 8);
                         if(safe >= enemy) blackMove++;
                     }
@@ -97,8 +99,11 @@ public class Evaluate {
                         do {                            
                             targetPoint.x = p2.x + direction[j][0];
                             targetPoint.y = p2.y + direction[j][1];
-                            if (game.isBlack(targetPoint.x, targetPoint.y)) enemy++;
-                            else safe++;
+                            if(isInMap(targetPoint.x, targetPoint.y)) {
+                                if (game.isBlack(targetPoint.x, targetPoint.y)) enemy++;
+                                else safe++;
+                            }
+                            j++;
                         } while (j < 8);
                         if(safe >= enemy) whiteMove++;
                     }
@@ -108,6 +113,7 @@ public class Evaluate {
         }
     }
     
+    //reverse tengah dan pinggir and uji
     private final int[][] positionValue = {
         {5, 20, 20, 20, 20, 5},
         {20, 30, 50, 50, 30, 20},
