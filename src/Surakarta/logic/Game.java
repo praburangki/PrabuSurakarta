@@ -109,7 +109,6 @@ public class Game implements Runnable {
                 break;
             } else if (move != null && !this.moveValidator.isMoveValid(move)) {
                 System.out.println("provided move was invalid : " + move);
-//                ConsoleGui.printCurrentGameState(this);
                 move = null;
                 System.exit(0);
             }

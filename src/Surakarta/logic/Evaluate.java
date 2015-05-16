@@ -17,7 +17,6 @@ public class Evaluate {
 
     public Evaluate(Game game) {
         this.game = game;
-        int i = 0;
     }
 
     private void pieceNum() {

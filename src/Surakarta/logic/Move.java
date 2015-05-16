@@ -1,6 +1,7 @@
 package Surakarta.logic;
 
 import java.awt.Point;
+import java.util.Vector;
 
 /**
  *
@@ -14,14 +15,16 @@ public class Move {
     public boolean isWhite;
     public boolean isBlack;
     public boolean isCapture;
-	public int score;
+    public int score;
     public Piece capturedPiece;
+    public Vector bestMove;
 
     public Move(int sourceRow, int sourceColumn, int targetRow, int targetColumn) {
         this.sourceRow = sourceRow;
         this.sourceColumn = sourceColumn;
         this.targetRow = targetRow;
         this.targetColumn = targetColumn;
+        bestMove = new Vector();
     }
     
     public Move(Point p1, Point p2, boolean isWhite, boolean isCapture) {
@@ -32,6 +35,7 @@ public class Move {
         this.isWhite = isWhite;
         this.isBlack = (isWhite ^ true);
         this.isCapture = isCapture;
+        bestMove = new Vector();
     }
 
     public Move(int sourceRow, int sourceColumn, int targetRow, int targetColumn, boolean isWhite, boolean isCapture) {
@@ -42,6 +46,7 @@ public class Move {
         this.isWhite = isWhite;
         this.isBlack = (isWhite ^ true);
         this.isCapture = isCapture;
+        bestMove = new Vector();
     }
 
     @Override

@@ -50,10 +50,10 @@ public class MoveValidator {
             return false;
         }
         
-        Vector v = new Vector(9);
+        Vector v = new Vector();
         
-        getDirection(move.sourceRow, move.sourceColumn, v);
         getCaptures(move.sourceRow, move.sourceColumn, v);
+        getDirection(move.sourceRow, move.sourceColumn, v);
         v.trimToSize();
         
         Enumeration e = v.elements();
@@ -67,7 +67,7 @@ public class MoveValidator {
     }
     
     public Vector getLegalMoves(int sourceRow, int sourceColumn) {
-        Vector v = new Vector(12);
+        Vector v = new Vector();
         getCaptures(sourceRow, sourceColumn, v);
         getDirection(sourceRow, sourceColumn, v);
         v.trimToSize();

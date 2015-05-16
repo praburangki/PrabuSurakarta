@@ -9,16 +9,14 @@ import java.util.Vector;
  */
 public class AiPlayerHandler implements IPlayerHandler {
     private Game game;
-    private MoveValidator moveValidator;
     private Evaluate evaluate;
+    private TranspositionTable transpositionTable = new TranspositionTable();
     
     public int maxDepth;
 
-    public AiPlayerHandler(Game game, boolean enemy) {
+    public AiPlayerHandler(Game game) {
         this.game = game;
-        this.moveValidator = this.game.getMoveValidator();
-        if(enemy) evaluate = new Evaluate(game);
-        else evaluate = new EvaluateEnemy(game);
+        evaluate = new Evaluate(game);
     }
     
     @Override
@@ -54,7 +52,7 @@ public class AiPlayerHandler implements IPlayerHandler {
             do {                
                 Move move = (Move) e.nextElement();
                 doMove(move);
-                int abValue = alphaBeta(1, Integer.MIN_VALUE, Integer.MAX_VALUE, color ^ 3);
+                int abValue = alphaBeta(move, 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color ^ 3);
                 undoMove(move);
                 if(abValue > bestValue) {
                     bestValue = abValue;
@@ -68,25 +66,38 @@ public class AiPlayerHandler implements IPlayerHandler {
         return bestMove;
     }
     
-    private int alphaBeta(int depth, int alpha, int beta, int color) {
+    private int alphaBeta(Move move, int depth, int alpha, int beta, int color) {
         if(depth == this.maxDepth 
                 || this.game.getGameState() == Game.GAME_STATE_END_WHITE_WON
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) 
             return evaluate.evaluate(game, color);
+        
+        if(transpositionTable.containsKey(move)) {
+            MoveEvaluation previousEvaluation = transpositionTable.get(move);
+            if(previousEvaluation.depth >= depth) {
+                move.bestMove = previousEvaluation.bestMove;
+                return previousEvaluation.value;
+            }
+        }
         
         Vector v = generateMoves(color);
         v.trimToSize();
         Enumeration e = v.elements();
         if (e.hasMoreElements()) {
             do {                
-                Move move = (Move) e.nextElement();
-                doMove(move);
-                int value = -1 * alphaBeta(depth + 1, -1 * beta, -1 * alpha, color ^ 3);
-                undoMove(move);
-                if (value > alpha) alpha = value;
+                Move moveTemp = (Move) e.nextElement();
+                doMove(moveTemp);
+                int value = -1 * alphaBeta(moveTemp, depth + 1, -1 * beta, -1 * alpha, color ^ 3);
+                undoMove(moveTemp);
+                if (value > alpha) {
+                    alpha = value;
+                    move.bestMove = v;
+                }
                 if (value >= beta) break;
             } while (e.hasMoreElements());
         }
+        
+        transpositionTable.put(move, new MoveEvaluation(alpha, depth, move.bestMove));
         
         return alpha;
     }

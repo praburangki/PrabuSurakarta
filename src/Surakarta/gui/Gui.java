@@ -4,7 +4,6 @@ import Surakarta.logic.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -134,6 +133,8 @@ public class Gui extends JPanel implements IPlayerHandler {
             g.setColor(Color.BLACK);
             g.drawOval(highlightSourceX + 1, highlightSourceY + 1, 25, 25);
             g.drawOval(highlightTargetX + 1, highlightTargetY + 1, 25, 25);
+            g.drawString("Move executed : \n(" + lastMove.sourceRow + ", " + lastMove.sourceColumn + ")->(" 
+                    + lastMove.targetRow + ", " + lastMove.targetColumn + ")", 0, 150);
 
             g.setColor(Color.RED);
             g.drawOval(highlightSourceX, highlightSourceY, 25, 25);
@@ -235,9 +236,6 @@ public class Gui extends JPanel implements IPlayerHandler {
 
     public boolean isDraggingGamePiecesEnabled() {
         return draggingGamePiecesEnabled;
-    }
-
-    public static void main(String[] args) {
     }
     
     private GuiPiece getGuiPieceAt(int row, int column) {
