@@ -50,10 +50,15 @@ public class Gui extends JPanel implements IPlayerHandler {
         addMouseMotionListener(listener);
 
         String labelText = getGameStateAsText();
-        labelGameState = new JLabel(labelText);
-        labelGameState.setBounds(0, 30, 80, 30);
+        labelGameState = new JLabel("Turn: " + labelText);
+        labelGameState.setBounds(10, 100, 200, 30);
         labelGameState.setForeground(Color.WHITE);
         this.add(labelGameState);
+        
+        
+        JButton newGameButton = new JButton("New Game");
+        newGameButton.setBounds(0, 30, 100, 30);
+        this.add(newGameButton);
 
         JFrame f = new JFrame();
         f.setVisible(true);
@@ -62,7 +67,7 @@ public class Gui extends JPanel implements IPlayerHandler {
         f.setResizable(false);
 
         f.setSize(imgBackground.getWidth(null), imgBackground.getHeight(null));
-
+        newGameButton.addActionListener(new NewGameButton(this, f));
     }
 
     private String getGameStateAsText() {
@@ -162,7 +167,7 @@ public class Gui extends JPanel implements IPlayerHandler {
             }
         }
 
-        labelGameState.setText(this.getGameStateAsText());
+        labelGameState.setText("Turn: " + this.getGameStateAsText());
     }
 
     private boolean isUserDraggingPiece() {

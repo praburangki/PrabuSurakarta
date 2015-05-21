@@ -10,12 +10,13 @@ import java.util.List;
  */
 public class Game implements Runnable {
 
-    public int gameState = GAME_STATE_WHITE;
+    public int gameState = GAME_STATE_BLACK;
     public static final int GAME_STATE_WHITE = 0;
     public static final int GAME_STATE_BLACK = 1;
     public static final int GAME_STATE_END_BLACK_WON = 2;
     public static final int GAME_STATE_END_WHITE_WON = 3;
     public boolean[][] blacks, whites;
+    public int moveCount;
 
     public List<Piece> pieces = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -26,6 +27,7 @@ public class Game implements Runnable {
     private IPlayerHandler activePlayerHandler;
     
     public Game() {
+        moveCount = 0;
         this.moveValidator = new MoveValidator(this);
         this.blacks = new boolean[6][6];
         this.whites = new boolean[6][6];
@@ -67,7 +69,7 @@ public class Game implements Runnable {
             }
         }
 
-        this.activePlayerHandler = this.whitePlayerHandler;
+        this.activePlayerHandler = this.blackPlayerHandler;
 
         System.out.println("Game : starting game flow");
         while (!isGameEndConditionReached()) {
@@ -119,6 +121,8 @@ public class Game implements Runnable {
         if (success) {
             this.blackPlayerHandler.moveSuccessfullyExecuted(move);
             this.whitePlayerHandler.moveSuccessfullyExecuted(move);
+            moveCount++;
+            
         } else {
             throw new IllegalStateException("move was valid, but failed to execute it.");
         }

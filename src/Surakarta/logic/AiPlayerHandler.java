@@ -10,13 +10,14 @@ import java.util.Vector;
 public class AiPlayerHandler implements IPlayerHandler {
     private Game game;
     private Evaluate evaluate;
-    private TranspositionTable transpositionTable = new TranspositionTable();
+    private TranspositionTable transpositionTable;
     
     public int maxDepth;
 
     public AiPlayerHandler(Game game) {
         this.game = game;
         evaluate = new Evaluate(game);
+        transpositionTable = new TranspositionTable();
     }
     
     @Override
@@ -36,15 +37,10 @@ public class AiPlayerHandler implements IPlayerHandler {
         
         int bestValue = Integer.MIN_VALUE;
         
-        Vector v = null;
-        int color = -1;
-        if (game.getGameState() == Game.GAME_STATE_BLACK) {
-            v = generateMoves(Piece.COLOR_BLACK);
-            color = Piece.COLOR_BLACK;
-        } else if (game.getGameState() == Game.GAME_STATE_WHITE) {
-            v = generateMoves(Piece.COLOR_WHITE);
-            color = Piece.COLOR_WHITE;
-        }
+        Vector v = new Vector();
+        int color = Piece.COLOR_BLACK;
+        v = generateMoves(color);
+        
         v.trimToSize();
         
         Enumeration e = v.elements();
@@ -52,7 +48,9 @@ public class AiPlayerHandler implements IPlayerHandler {
             do {                
                 Move move = (Move) e.nextElement();
                 doMove(move);
+//                System.out.println("The move: " + move);
                 int abValue = alphaBeta(move, 1, Integer.MIN_VALUE, Integer.MAX_VALUE, color ^ 3);
+//                System.out.println("The move: " + move + " with value " + abValue);
                 undoMove(move);
                 if(abValue > bestValue) {
                     bestValue = abValue;

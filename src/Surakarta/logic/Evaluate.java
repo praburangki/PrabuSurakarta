@@ -1,6 +1,7 @@
 package Surakarta.logic;
 
 import java.awt.Point;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -82,6 +83,13 @@ public class Evaluate {
                 } while (i < 8);
             } while (e.hasMoreElements());
         }
+//        
+//        System.out.println("Black board:");
+//        for (int i = 0; i < 6; i++) {
+//            System.out.println(Arrays.toString(game.blacks[i]));
+//        }
+//        System.out.println();
+//        System.out.println("blackMove : " + blackMove);
 
         e = whiteVector.elements();
         if (e.hasMoreElements()) {
@@ -110,6 +118,13 @@ public class Evaluate {
                 } while (i < 8);
             } while (e.hasMoreElements());
         }
+        
+//        System.out.println("White board:");
+//        for (int i = 0; i < 6; i++) {
+//            System.out.println(Arrays.toString(game.whites[i]));
+//        }
+//        System.out.println();
+//        System.out.println("whiteMove : " + whiteMove);
     }
     
     //reverse tengah dan pinggir and uji
@@ -122,13 +137,25 @@ public class Evaluate {
         {5, 20, 20, 20, 20, 5}
     };
     
+    private final int[][] positionValueReverse = {
+        {5, 20, 20, 20, 20, 5},
+        {20, 40, 30, 30, 40, 20},
+        {20, 30, 50, 50, 30, 20},
+        {20, 30, 50, 50, 30, 20},
+        {20, 40, 30, 30, 40, 20},
+        {5, 20, 20, 20, 20, 5}
+    };
+    
     private void posValue() {
+        blackPos = 0;
+        whitePos = 0;
         Point p1 = new Point();
         Enumeration e = blackVector.elements();
         if (e.hasMoreElements()) {
             do {
                 p1 = (Point) e.nextElement();
-                blackPos += positionValue[p1.x][p1.y];
+                if(game.moveCount % 3 == 0) blackPos += positionValue[p1.x][p1.y];
+                else blackPos += positionValueReverse[p1.x][p1.y];
             } while (e.hasMoreElements());
         }
 
@@ -136,7 +163,8 @@ public class Evaluate {
         if (e.hasMoreElements()) {
             do {
                 p1 = (Point) e.nextElement();
-                whitePos += positionValue[p1.x][p1.y];
+                if(game.moveCount % 3 == 0) whitePos += positionValue[p1.x][p1.y];
+                else whitePos += positionValueReverse[p1.x][p1.y];
             } while (e.hasMoreElements());
         }
     }
@@ -160,13 +188,17 @@ public class Evaluate {
         pieceNum();
         moveRange();
         posValue();
+        
         blackValue += (blackPos) + (blackMove * 100 / 8) + (blackNum * 100);
         whiteValue += (whitePos) + (whiteMove * 100 / 8) + (whiteNum * 100);
-
+//        System.out.println("blackPos: " + blackPos + " blackMove: " + (blackMove * 100 / 8) + 
+//                " blackNum: " + (blackNum * 100) + " = " + blackValue);
+//        blackValue += (blackMove * 100 / 8);
+//        whiteValue += (whiteMove * 100 / 8);
         if (color == Piece.COLOR_BLACK) {
-            return blackValue - whiteValue;
-        } else {
             return whiteValue - blackValue;
+        } else {
+            return blackValue - whiteValue;
         }
     }
 }
