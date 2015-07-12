@@ -15,10 +15,20 @@ public class Evaluate {
     int blackNum, whiteNum, blackMove, whiteMove, blackPos, whitePos;
     Point[] blackPoint, whitePoint;
     Vector<Point> blackVector, whiteVector;
+    int value;
+    int depth;
+    Vector bestMove;
 
     public Evaluate(Game game) {
         this.game = game;
     }
+    
+    public Evaluate(Game game, int depth, Vector bestMove, int color) {
+        this.value = evaluate(game, color);
+        this.depth = depth;
+        this.bestMove = bestMove;
+    }
+    
 
     private void pieceNum() {
         blackNum = 0;
@@ -201,4 +211,7 @@ public class Evaluate {
             return blackValue - whiteValue;
         }
     }
+    
+    
+    
 }

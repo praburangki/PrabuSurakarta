@@ -99,6 +99,7 @@ public class Game implements Runnable {
     
     private void waitForMove() {
         Move move = null;
+        long start = System.currentTimeMillis();
         do {
             move = this.activePlayerHandler.getMove();
             try {
@@ -115,6 +116,9 @@ public class Game implements Runnable {
                 System.exit(0);
             }
         } while (move == null);
+        long end = System.currentTimeMillis();
+        
+        System.out.println("Time elapsed: " + (end - start) + " miliseconds");
 
         //execute move
         boolean success = this.movePiece(move);

@@ -6,6 +6,6 @@ import java.util.Hashtable;
  *
  * @author praburangki
  */
-public class TranspositionTable extends Hashtable<Move, MoveEvaluation> {
+public class TranspositionTable extends Hashtable<Board, Evaluate> {
     
 }

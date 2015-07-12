@@ -11,6 +11,7 @@ public class AiPlayerHandler implements IPlayerHandler {
     private Game game;
     private Evaluate evaluate;
     private TranspositionTable transpositionTable;
+    private Board board;
     
     public int maxDepth;
 
@@ -70,10 +71,11 @@ public class AiPlayerHandler implements IPlayerHandler {
                 || this.game.getGameState() == Game.GAME_STATE_END_BLACK_WON) 
             return evaluate.evaluate(game, color);
         
-        if(transpositionTable.containsKey(move)) {
-            MoveEvaluation previousEvaluation = transpositionTable.get(move);
+        board = new Board(game);
+        if(transpositionTable.containsKey(board)) {
+            Evaluate previousEvaluation = transpositionTable.get(board);
             if(previousEvaluation.depth >= depth) {
-                move.bestMove = previousEvaluation.bestMove;
+                board.bestMove = previousEvaluation.bestMove;
                 return previousEvaluation.value;
             }
         }
@@ -95,7 +97,7 @@ public class AiPlayerHandler implements IPlayerHandler {
             } while (e.hasMoreElements());
         }
         
-        transpositionTable.put(move, new MoveEvaluation(alpha, depth, move.bestMove));
+        transpositionTable.put(board, new Evaluate(game, depth, board.bestMove, color));
         
         return alpha;
     }
